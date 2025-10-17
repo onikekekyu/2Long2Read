@@ -1,0 +1,415 @@
+{
+  "metadata": {
+    "company_name": "Spotify",
+    "language": "en",
+    "word_count": 12847,
+    "estimated_reading_time_minutes": 64,
+    "last_updated": "August 26, 2025",
+    "document_type": "Terms of Service"
+  },
+  "executive_summary": {
+    "one_liner": "Comprehensive terms with mandatory arbitration and broad content licenses that limit user legal options significantly.",
+    "key_takeaways": [
+      "You must resolve all disputes through individual arbitration, waiving your right to jury trials and class action lawsuits",
+      "Spotify gains an irrevocable, worldwide license to use any content you post, including modifying and distributing it freely",
+      "The company can terminate your account or change the service at any time with minimal notice and limited refund obligations",
+      "You must indemnify Spotify for any claims arising from your use, potentially making you liable for legal costs",
+      "Price changes can occur with advance notice, and continued use means automatic acceptance of new pricing"
+    ],
+    "overall_verdict": "Concerning"
+  },
+  "risk_scores": {
+    "overall": 68,
+    "data_privacy": 55,
+    "user_rights": 78,
+    "termination_risk": 72,
+    "legal_protection": 82,
+    "transparency": 45
+  },
+  "key_flags": {
+    "data_sharing_third_party": true,
+    "data_selling": false,
+    "ip_rights_transfer": true,
+    "content_monitoring": true,
+    "termination_without_notice": true,
+    "forced_arbitration": true,
+    "class_action_waiver": true,
+    "unilateral_changes": true,
+    "broad_indemnification": true,
+    "location_tracking": false
+  },
+  "dangerous_clauses": [
+    {
+      "id": "arb_001",
+      "type": "LEGAL",
+      "severity": "CRITICAL",
+      "title": "Mandatory Individual Arbitration with Class Action Waiver",
+      "summary": "You must resolve all disputes through individual arbitration and cannot participate in class action lawsuits, significantly limiting your legal options and making it expensive to pursue small claims.",
+      "exact_quote": "YOU AND SPOTIFY AGREE THAT EACH MAY BRING CLAIMS AGAINST THE OTHER IN ARBITRATION OR LITIGATION ONLY IN YOUR OR ITS INDIVIDUAL CAPACITY AND NOT AS A PLAINTIFF OR CLASS MEMBER IN ANY PURPORTED CLASS, COLLECTIVE, CONSOLIDATED, PRIVATE ATTORNEY GENERAL, OR REPRESENTATIVE ACTION.",
+      "user_impact": "You lose the ability to join with other users in class action lawsuits, making it financially impractical to pursue claims for small amounts of money. Arbitration costs and complexity may prevent you from seeking justice.",
+      "recommendation": "Understand that you have 30 days to opt out of changes to the arbitration agreement by sending a personally signed email to tounotice@spotify.com. Consider doing this if you want to preserve more legal options."
+    },
+    {
+      "id": "ip_001",
+      "type": "CONTENT",
+      "severity": "HIGH",
+      "title": "Irrevocable Worldwide License to Your Content",
+      "summary": "Spotify receives a permanent, irrevocable license to use, modify, and distribute any content you post, even after you delete your account, with no compensation to you.",
+      "exact_quote": "you hereby grant to Spotify a non-exclusive, transferable, sublicensable, royalty-free, fully paid, irrevocable, worldwide license to reproduce, make available, perform and display, translate, modify, create derivative works from, distribute, and otherwise use any such User Content through any medium",
+      "user_impact": "Any playlists, comments, reviews, or other content you create becomes Spotify's to use forever, including selling or licensing to third parties. You cannot revoke this permission even if you close your account.",
+      "recommendation": "Only post content you're comfortable with Spotify using indefinitely. Avoid sharing personal information, original creative works, or anything you might want exclusive control over later."
+    },
+    {
+      "id": "term_001",
+      "type": "TERMINATION",
+      "severity": "HIGH",
+      "title": "Termination Without Liability or Refunds",
+      "summary": "Spotify can terminate your account at any time if they believe you breached terms, with no liability to you and generally no refunds for prepaid subscriptions.",
+      "exact_quote": "Spotify may terminate these Terms or suspend your access to the Spotify Service at any time if we believe you have breached any of these Terms... you agree that Spotify shall have no liability or responsibility to you, and (except as expressly provided in these Terms) Spotify will not refund any amounts that you have already paid.",
+      "user_impact": "You could lose access to your account and any prepaid subscription fees without warning if Spotify determines you violated their terms, even if you disagree with their assessment.",
+      "recommendation": "Keep records of your account activity and payments. Carefully review the User Guidelines to avoid unintentional violations. Consider monthly rather than annual subscriptions to minimize financial risk."
+    },
+    {
+      "id": "legal_001",
+      "type": "LEGAL",
+      "severity": "HIGH",
+      "title": "Broad User Indemnification Requirement",
+      "summary": "You must defend and pay for any legal claims against Spotify arising from your use of the service, including attorney fees, potentially costing you thousands of dollars.",
+      "exact_quote": "You agree to indemnify and hold Spotify harmless from and against all damages, losses, and expenses of any kind (including reasonable attorneys' fees and costs) arising out of or related to: (1) your breach of any of these Terms; (2) any User Content you post; (3) any activity in which you engage on or through the Spotify Service; and (4) your violation of any law or the rights of a third party.",
+      "user_impact": "If someone sues Spotify over something you posted or did on the platform, you must pay Spotify's legal defense costs, which could be substantial even if you did nothing wrong.",
+      "recommendation": "Be extremely cautious about what you post and share. Consider whether you have liability insurance that might cover such claims. Avoid any activity that could be construed as violating others' rights."
+    },
+    {
+      "id": "change_001",
+      "type": "USER_RIGHTS",
+      "severity": "MEDIUM",
+      "title": "Unilateral Terms Changes with Automatic Acceptance",
+      "summary": "Spotify can change these terms at any time, and your continued use of the service automatically means you accept the changes, even if you don't read them.",
+      "exact_quote": "We may make changes to these Terms from time to time by notifying you of such changes by any reasonable means... Your use of the Spotify Service following any changes to these Terms will constitute your acceptance of such changes.",
+      "user_impact": "You could unknowingly agree to worse terms simply by continuing to use Spotify. Important rights or protections could be removed without your active consent.",
+      "recommendation": "Set a reminder to check for terms updates periodically. Read notification emails from Spotify carefully. If you disagree with changes, you must cancel before they take effect."
+    },
+    {
+      "id": "liab_001",
+      "type": "LEGAL",
+      "severity": "MEDIUM",
+      "title": "Severe Liability Limitations and Damage Caps",
+      "summary": "Spotify's maximum liability to you is capped at the lesser of what you paid in the last 12 months or $30, regardless of actual damages you suffer.",
+      "exact_quote": "AGGREGATE LIABILITY FOR ALL CLAIMS RELATING TO THE SPOTIFY SERVICE... MORE THAN THE GREATER OF (A) THE AMOUNTS PAID BY YOU TO SPOTIFY DURING THE TWELVE MONTHS PRIOR TO THE FIRST CLAIM; OR (B) $30.00.",
+      "user_impact": "Even if Spotify's service causes you significant harm or losses, you can only recover a maximum of $30 or your annual subscription fee, whichever is greater. This may not cover your actual damages.",
+      "recommendation": "Don't rely on Spotify for critical functions where service failure could cause significant harm. Maintain backups of important playlists or data outside the platform."
+    },
+    {
+      "id": "time_001",
+      "type": "LEGAL",
+      "severity": "MEDIUM",
+      "title": "One-Year Limitation Period for Claims",
+      "summary": "You must file any legal claim within one year of when you discover the problem, or you lose the right to pursue it forever.",
+      "exact_quote": "ANY CLAIM ARISING UNDER THESE TERMS MUST BE COMMENCED (BY FILING A DEMAND OR FILING AN INDIVIDUAL ACTION AS SPECIFIED UNDER THE ARBITRATION AGREEMENT BELOW) WITHIN ONE (1) YEAR AFTER THE DATE THE PARTY ASSERTING THE CLAIM FIRST KNOWS OR REASONABLY SHOULD KNOW OF THE ACT, OMISSION, OR DEFAULT GIVING RISE TO THE CLAIM",
+      "user_impact": "You have a much shorter time to pursue legal action than typical statutes of limitations allow. If you don't act quickly, you permanently lose your right to seek compensation.",
+      "recommendation": "Document any issues immediately when they occur. Don't delay in pursuing complaints or legal action if you believe you have a valid claim against Spotify."
+    },
+    {
+      "id": "content_001",
+      "type": "CONTENT",
+      "severity": "MEDIUM",
+      "title": "Content Removal Without Notice or Explanation",
+      "summary": "Spotify can remove any content, including songs, podcasts, or your user content, at any time without notice or explanation, and has no obligation to provide specific content.",
+      "exact_quote": "Spotify has no obligation to provide any specific content through the Spotify Service, and Spotify or the applicable owners may remove access to particular songs, videos, podcasts, audiobooks and other Content without notice.",
+      "user_impact": "Your favorite music, playlists, or podcasts could disappear without warning. Content you created or curated could be removed at Spotify's discretion with no recourse.",
+      "recommendation": "Don't rely on Spotify as your only source for important content. Keep local copies of music you own and maintain backup playlists on other platforms when possible."
+    },
+    {
+      "id": "device_001",
+      "type": "DATA_PRIVACY",
+      "severity": "MEDIUM",
+      "title": "Device Resource Usage and Advertising Rights",
+      "summary": "You grant Spotify the right to use your device's processor, bandwidth, and storage, and to deliver advertising to you through your device resources.",
+      "exact_quote": "You also grant to us the right (1) to allow the Spotify Service to use the processor, bandwidth, and storage hardware on your Device in order to facilitate the operation of the Spotify Service, and (2) to provide advertising and other information to you",
+      "user_impact": "Spotify can use your device's computing power, internet bandwidth, and storage space, potentially slowing your device or increasing data usage. You'll receive advertising that uses these resources.",
+      "recommendation": "Monitor your device performance and data usage. Consider premium subscriptions to reduce advertising. Be aware that the app may consume more resources than expected."
+    },
+    {
+      "id": "monitor_001",
+      "type": "CONTENT",
+      "severity": "LOW",
+      "title": "Content Monitoring Without Obligation",
+      "summary": "Spotify may monitor your content and activity but has no obligation to do so, and can remove content for any or no reason without prior notice.",
+      "exact_quote": "Spotify may, but has no obligation to, monitor or review User Content (whether publicly posted or privately shared). Spotify reserves the right to remove or disable access to any User Content for any or no reason.",
+      "user_impact": "Your posts and activity may be monitored, but Spotify isn't required to protect you from harmful content. Content removal decisions are entirely at Spotify's discretion.",
+      "recommendation": "Don't expect Spotify to moderate all harmful content. Report violations when you see them, but understand enforcement is discretionary. Protect yourself by being cautious about interactions."
+    }
+  ],
+  "sections_breakdown": [
+    {
+      "title": "Introduction and Service Provider",
+      "risk_level": "MEDIUM",
+      "summary": "Establishes the agreement between you and Spotify USA Inc., sets age requirements (13+ with parental consent, 18+ without), and highlights the mandatory arbitration provision. Requires U.S. residency and accurate account information.",
+      "key_points": [
+        "Minimum age is 13 with parental consent, 18 without consent",
+        "Contains mandatory arbitration clause that limits legal options",
+        "Only available to U.S. residents with accurate account information",
+        "Agreement includes multiple incorporated documents beyond main terms"
+      ]
+    },
+    {
+      "title": "The Spotify Service",
+      "risk_level": "HIGH",
+      "summary": "Describes service options including free and paid subscriptions, trials, and third-party integrations. Critically, Spotify reserves the right to modify, suspend, or discontinue any part of the service without notice or liability, with limited refund obligations.",
+      "key_points": [
+        "Service can be changed or discontinued at any time without notice",
+        "No guarantee of specific content availability - songs/podcasts can be removed",
+        "Refunds only provided for permanently discontinued paid subscriptions, prorated",
+        "Third-party applications and devices may have additional terms",
+        "Temporary interruptions expected for maintenance and legal compliance"
+      ]
+    },
+    {
+      "title": "Your Use of the Spotify Service",
+      "risk_level": "MEDIUM",
+      "summary": "Covers account creation, usage rights, and restrictions. Grants limited, non-commercial, revocable access. Users are responsible for account security and unauthorized use. Spotify retains all ownership rights to software and content.",
+      "key_points": [
+        "Access is limited, non-exclusive, and revocable at any time",
+        "You're responsible for all account activity, including unauthorized use",
+        "Cannot redistribute, sell, or transfer the service or content",
+        "Software is licensed, not sold - Spotify retains ownership",
+        "Must comply with User Guidelines and Platform Rules"
+      ]
+    },
+    {
+      "title": "Payments and Cancellation",
+      "risk_level": "HIGH",
+      "summary": "Details payment terms for subscriptions, including recurring billing, price changes, and cancellation policies. Spotify can change prices with advance notice, and continued use means acceptance. Limited refund policy with no credits for partial periods.",
+      "key_points": [
+        "Subscriptions continue indefinitely until cancelled by user",
+        "Price changes communicated in advance; continued use means acceptance",
+        "Cancellation takes effect at end of billing period, no partial refunds",
+        "Spotify can terminate paid subscriptions with 14 days notice",
+        "Tax rates can change based on location without additional notice"
+      ]
+    },
+    {
+      "title": "User Guidelines and Brand Accounts",
+      "risk_level": "MEDIUM",
+      "summary": "Establishes behavioral expectations and rules for using the service. Brand accounts have additional restrictions and transparency requirements. Users must comply with all applicable laws and respect intellectual property rights.",
+      "key_points": [
+        "Must follow User Guidelines, Platform Rules, and all applicable laws",
+        "Brand accounts cannot imply endorsements without permission",
+        "Brands must disclose any consideration provided to artists or users",
+        "Violations can result in account termination",
+        "Export control and sanctions compliance required"
+      ]
+    },
+    {
+      "title": "Content and Intellectual Property Rights",
+      "risk_level": "HIGH",
+      "summary": "Defines user content ownership and licensing. While you retain ownership, you grant Spotify an irrevocable, worldwide license to use your content in any way. Spotify can monitor and remove content without notice. You waive moral rights to your content.",
+      "key_points": [
+        "You grant Spotify an irrevocable, royalty-free, worldwide license to your content",
+        "License includes rights to modify, distribute, and create derivative works",
+        "Spotify can monitor, remove, or disable access to any user content",
+        "You waive moral rights including attribution and objection to modifications",
+        "Feedback provided to Spotify can be used without restriction or payment"
+      ]
+    },
+    {
+      "title": "Device Rights and Content Experience",
+      "risk_level": "MEDIUM",
+      "summary": "Grants Spotify rights to use your device resources for service operation and advertising. Content recommendations may be influenced by commercial agreements. Advertising may be incorporated into content.",
+      "key_points": [
+        "Spotify can use your device's processor, bandwidth, and storage",
+        "Company has right to deliver advertising using your device resources",
+        "Content recommendations influenced by commercial considerations",
+        "Some content may include integrated advertising",
+        "Business partners can also use device resources for advertising"
+      ]
+    },
+    {
+      "title": "Customer Support and Complaints",
+      "risk_level": "LOW",
+      "summary": "Provides information about customer support resources, community forums, and complaint procedures. Includes specific California consumer protection contact information.",
+      "key_points": [
+        "Customer support available through website resources",
+        "Community forums have separate terms of use",
+        "California residents have additional complaint assistance options",
+        "Contact information provided for questions and concerns"
+      ]
+    },
+    {
+      "title": "Suspending and Terminating Service",
+      "risk_level": "HIGH",
+      "summary": "Spotify can terminate or suspend access at any time for terms violations, service discontinuation, or legal compliance. No liability or refunds except as expressly stated. Users can terminate anytime but certain sections survive termination.",
+      "key_points": [
+        "Spotify can terminate for any terms breach without liability",
+        "No refunds for amounts already paid except in specific circumstances",
+        "Users can terminate anytime but lose access immediately",
+        "Key sections survive termination including arbitration and IP provisions",
+        "Suspension or termination can occur without prior warning"
+      ]
+    },
+    {
+      "title": "Warranty Disclaimers",
+      "risk_level": "HIGH",
+      "summary": "Service provided 'as is' with no warranties of any kind. Spotify disclaims all warranties including merchantability, fitness for purpose, and non-infringement. No guarantee service is free from malware or harmful components.",
+      "key_points": [
+        "Service provided 'as is' and 'as available' without warranties",
+        "No guarantee of quality, reliability, or fitness for any purpose",
+        "No warranty that service is free from malware or harmful components",
+        "Explicit content filters may not catch all explicit content",
+        "No responsibility for third-party applications or content"
+      ]
+    },
+    {
+      "title": "Limitation of Liability",
+      "risk_level": "HIGH",
+      "summary": "Spotify's liability is severely limited. No liability for indirect, incidental, or consequential damages. Total liability capped at greater of amounts paid in last 12 months or $30. Claims must be filed within one year.",
+      "key_points": [
+        "No liability for indirect, special, or consequential damages",
+        "Maximum liability is greater of 12 months payments or $30",
+        "No liability for loss of data, business, or profits",
+        "Claims must be filed within one year of discovery",
+        "Limitations apply regardless of legal theory or prior warnings"
+      ]
+    },
+    {
+      "title": "Arbitration Agreement",
+      "risk_level": "CRITICAL",
+      "summary": "Mandatory individual arbitration for all disputes with very limited exceptions. Waives right to jury trial and class actions. Complex pre-arbitration requirements including 60-day informal resolution period. Special procedures for mass arbitrations with staged proceedings.",
+      "key_points": [
+        "All disputes must go to individual arbitration, not court",
+        "No class actions, collective actions, or representative proceedings allowed",
+        "Must send written notice and attempt 60-day informal resolution first",
+        "Arbitration administered by NAM under specific rules",
+        "Mass arbitration procedures involve staged proceedings and mandatory mediation",
+        "30-day opt-out period for changes to arbitration agreement",
+        "Claims must be filed within one year or lost forever"
+      ]
+    },
+    {
+      "title": "Indemnification",
+      "risk_level": "HIGH",
+      "summary": "Users must indemnify and hold Spotify harmless from all damages, losses, and expenses including attorney fees arising from terms breaches, user content, service activities, or law violations.",
+      "key_points": [
+        "You must pay for Spotify's legal defense if claims arise from your use",
+        "Includes reasonable attorney fees and costs",
+        "Applies to any breach of terms or user content you post",
+        "Covers violations of law or third-party rights",
+        "No cap on indemnification amounts"
+      ]
+    },
+    {
+      "title": "Governing Law and Jurisdiction",
+      "risk_level": "MEDIUM",
+      "summary": "Terms governed by New York state law. Disputes not subject to arbitration must be filed in New York courts. Parties waive right to jury trial for any court proceedings.",
+      "key_points": [
+        "New York law governs except where preempted by federal law",
+        "Exclusive jurisdiction in New York federal or state courts",
+        "Jury trial waiver for any court proceedings",
+        "Cannot object to New York venue or jurisdiction",
+        "Federal law applies to arbitration agreement interpretation"
+      ]
+    },
+    {
+      "title": "About These Terms",
+      "risk_level": "MEDIUM",
+      "summary": "Spotify can change terms at any time with notice. Continued use means acceptance. Premium subscribers can cancel within 30 days of material changes. Terms constitute entire agreement and supersede prior agreements.",
+      "key_points": [
+        "Terms can be changed at any time with reasonable notice",
+        "Continued use after changes means automatic acceptance",
+        "30-day window to opt out of arbitration agreement changes",
+        "Terms supersede all prior agreements",
+        "Spotify can assign terms but users cannot",
+        "Invalid provisions don't affect remaining terms"
+      ]
+    }
+  ],
+  "comparison_to_industry": {
+    "overall_rating": "Worse than average",
+    "standout_good": [
+      "Provides 60-day informal resolution period before arbitration, longer than many competitors",
+      "Offers ability to opt out of arbitration agreement changes within 30 days",
+      "Relatively transparent about content recommendation algorithms and commercial influences",
+      "Includes specific procedures for mass arbitrations rather than blocking them entirely"
+    ],
+    "standout_bad": [
+      "Irrevocable license to user content is broader than many competitors who allow content deletion",
+      "Liability cap of $30 or 12-month fees is lower than industry standard",
+      "One-year limitation period for claims is shorter than typical statutes of limitations",
+      "Can terminate paid subscriptions with only 14 days notice, less than some competitors",
+      "Mandatory arbitration with class action waiver more restrictive than some streaming services",
+      "No obligation to provide specific content with ability to remove without notice"
+    ]
+  },
+  "readability": {
+    "score": 4,
+    "grade_level": "Legal Expert",
+    "estimated_comprehension": "15%"
+  },
+  "action_items": [
+    {
+      "priority": "HIGH",
+      "action": "Consider opting out of arbitration agreement changes within 30 days by sending a personally signed email to tounotice@spotify.com",
+      "reason": "Preserves your right to pursue legal action in court and join class actions if Spotify makes unfavorable changes to dispute resolution terms"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Review and understand what content you post, as Spotify gains irrevocable rights to use it forever",
+      "reason": "Any playlists, comments, or content you create can be used by Spotify indefinitely, even after account deletion, with no compensation"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Keep detailed records of all payments, account activity, and any issues that arise",
+      "reason": "You have only one year to file claims, and documentation is critical for arbitration. Spotify's liability is capped at very low amounts."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Choose monthly subscriptions over annual prepaid plans to minimize financial risk",
+      "reason": "Spotify can terminate your account with limited refund obligations, so shorter commitment periods reduce potential losses"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Maintain backup playlists and music libraries outside of Spotify",
+      "reason": "Content can be removed without notice, and service can be discontinued. Don't rely on Spotify as your only music source."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Set calendar reminders to check for terms updates every few months",
+      "reason": "Terms can change at any time, and continued use means automatic acceptance. You need to actively monitor for unfavorable changes."
+    },
+    {
+      "priority": "LOW",
+      "action": "Review User Guidelines and Platform Rules to understand what could trigger account termination",
+      "reason": "Violations can result in immediate termination without refunds. Understanding the rules helps you avoid unintentional breaches."
+    },
+    {
+      "priority": "LOW",
+      "action": "Monitor your device performance and data usage when using Spotify",
+      "reason": "Spotify can use your device's processor, bandwidth, and storage, which may impact performance and data costs"
+    }
+  ],
+  "good_news": [
+    "Spotify provides a 60-day informal resolution period before arbitration, giving users a meaningful opportunity to resolve disputes without legal proceedings - this is longer than many competitors offer",
+    "Users can opt out of changes to the arbitration agreement within 30 days, preserving existing dispute resolution rights even as terms evolve",
+    "The company is relatively transparent about how content recommendations work and that commercial considerations influence what you see, which is more honest than some platforms",
+    "For permanently discontinued paid subscriptions, Spotify will provide prorated refunds for the unused portion, showing some fairness in service changes",
+    "The terms explicitly state they don't limit rights that can't be restricted by contract under applicable law, acknowledging consumer protection laws",
+    "Customer support resources are clearly identified with multiple contact methods including specific California consumer protection information"
+  ],
+  "meta": {
+    "source_url": "https://www.spotify.com/us/legal/end-user-agreement/",
+    "category": "Streaming",
+    "analyzed_at": "2025-10-17T13:58:32.196851Z",
+    "raw_text_length": 54167,
+    "analyzer_version": "hybrid_v1.0"
+  },
+  "ui_helpers": {
+    "risk_color": "#EA580C",
+    "severity_badge": {
+      "color": "orange",
+      "icon": "alert-triangle"
+    },
+    "critical_issues_count": 1,
+    "high_issues_count": 3,
+    "reading_difficulty": "Moderate"
+  }
+}

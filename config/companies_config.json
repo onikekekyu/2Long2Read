@@ -1,0 +1,354 @@
+{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Google",
+      "url": "https://policies.google.com/terms",
+      "language": "en",
+      "category": "Tech Giant"
+    },
+    {
+      "id": 2,
+      "name": "Facebook (Meta)",
+      "url": "https://www.facebook.com/legal/terms",
+      "language": "en",
+      "category": "Social Media"
+    },
+    {
+      "id": 3,
+      "name": "Amazon",
+      "url": "https://www.amazon.com/gp/help/customer/display.html?nodeId=508088",
+      "language": "en",
+      "category": "E-commerce"
+    },
+    {
+      "id": 4,
+      "name": "Apple",
+      "url": "https://www.apple.com/legal/internet-services/terms/site.html",
+      "language": "en",
+      "category": "Tech Giant"
+    },
+    {
+      "id": 5,
+      "name": "Microsoft",
+      "url": "https://www.microsoft.com/en-us/servicesagreement",
+      "language": "en",
+      "category": "Tech Giant"
+    },
+    {
+      "id": 6,
+      "name": "Twitter (X)",
+      "url": "https://twitter.com/en/tos",
+      "language": "en",
+      "category": "Social Media"
+    },
+    {
+      "id": 7,
+      "name": "Instagram",
+      "url": "https://help.instagram.com/581066165581870",
+      "language": "en",
+      "category": "Social Media"
+    },
+    {
+      "id": 8,
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/legal/terms-of-service",
+      "language": "en",
+      "category": "Social Media"
+    },
+    {
+      "id": 9,
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/legal/user-agreement",
+      "language": "en",
+      "category": "Professional Network"
+    },
+    {
+      "id": 10,
+      "name": "Reddit",
+      "url": "https://www.redditinc.com/policies/user-agreement",
+      "language": "en",
+      "category": "Social Media"
+    },
+    {
+      "id": 11,
+      "name": "Dropbox",
+      "url": "https://www.dropbox.com/terms",
+      "language": "en",
+      "category": "Cloud Storage"
+    },
+    {
+      "id": 12,
+      "name": "Notion",
+      "url": "https://www.notion.so/Terms-and-Privacy-28ffdd083dc3473e9c2da6ec011b58ac",
+      "language": "en",
+      "category": "Productivity"
+    },
+    {
+      "id": 13,
+      "name": "Slack",
+      "url": "https://slack.com/terms-of-service",
+      "language": "en",
+      "category": "Communication"
+    },
+    {
+      "id": 14,
+      "name": "Discord",
+      "url": "https://discord.com/terms",
+      "language": "en",
+      "category": "Communication"
+    },
+    {
+      "id": 15,
+      "name": "eBay",
+      "url": "https://www.ebay.com/help/policies/member-behaviour-policies/user-agreement",
+      "language": "en",
+      "category": "E-commerce"
+    },
+    {
+      "id": 16,
+      "name": "Shopify",
+      "url": "https://www.shopify.com/legal/terms",
+      "language": "en",
+      "category": "E-commerce"
+    },
+    {
+      "id": 17,
+      "name": "PayPal",
+      "url": "https://www.paypal.com/us/webapps/mpp/ua/useragreement-full",
+      "language": "en",
+      "category": "Payment"
+    },
+    {
+      "id": 18,
+      "name": "Netflix",
+      "url": "https://help.netflix.com/legal/termsofuse",
+      "language": "en",
+      "category": "Streaming"
+    },
+    {
+      "id": 19,
+      "name": "Spotify",
+      "url": "https://www.spotify.com/us/legal/end-user-agreement/",
+      "language": "en",
+      "category": "Streaming"
+    },
+    {
+      "id": 20,
+      "name": "YouTube",
+      "url": "https://www.youtube.com/t/terms",
+      "language": "en",
+      "category": "Video Platform"
+    },
+    {
+      "id": 21,
+      "name": "WhatsApp",
+      "url": "https://www.whatsapp.com/legal/terms-of-service",
+      "language": "en",
+      "category": "Messaging"
+    },
+    {
+      "id": 22,
+      "name": "Zoom",
+      "url": "https://explore.zoom.us/en/terms/",
+      "language": "en",
+      "category": "Video Conferencing"
+    },
+    {
+      "id": 23,
+      "name": "Airbnb",
+      "url": "https://www.airbnb.com/help/article/2908",
+      "language": "en",
+      "category": "Travel"
+    },
+    {
+      "id": 24,
+      "name": "Uber",
+      "url": "https://www.uber.com/legal/en/document/?name=general-terms-of-use",
+      "language": "en",
+      "category": "Transportation"
+    },
+    {
+      "id": 25,
+      "name": "Lyft",
+      "url": "https://www.lyft.com/terms",
+      "language": "en",
+      "category": "Transportation"
+    },
+    {
+      "id": 26,
+      "name": "GitHub",
+      "url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+      "language": "en",
+      "category": "Developer Platform"
+    },
+    {
+      "id": 27,
+      "name": "GitLab",
+      "url": "https://about.gitlab.com/terms/",
+      "language": "en",
+      "category": "Developer Platform"
+    },
+    {
+      "id": 28,
+      "name": "Stack Overflow",
+      "url": "https://stackoverflow.com/legal/terms-of-service",
+      "language": "en",
+      "category": "Developer Community"
+    },
+    {
+      "id": 29,
+      "name": "Stripe",
+      "url": "https://stripe.com/legal/ssa",
+      "language": "en",
+      "category": "Payment"
+    },
+    {
+      "id": 30,
+      "name": "Twitch",
+      "url": "https://www.twitch.tv/p/en/legal/terms-of-service/",
+      "language": "en",
+      "category": "Streaming"
+    },
+    {
+      "id": 31,
+      "name": "Pinterest",
+      "url": "https://policy.pinterest.com/en/terms-of-service",
+      "language": "en",
+      "category": "Social Media"
+    },
+    {
+      "id": 32,
+      "name": "Snapchat",
+      "url": "https://snap.com/en-US/terms",
+      "language": "en",
+      "category": "Social Media"
+    },
+    {
+      "id": 33,
+      "name": "Telegram",
+      "url": "https://telegram.org/tos",
+      "language": "en",
+      "category": "Messaging"
+    },
+    {
+      "id": 34,
+      "name": "Signal",
+      "url": "https://signal.org/legal/",
+      "language": "en",
+      "category": "Messaging"
+    },
+    {
+      "id": 35,
+      "name": "Adobe",
+      "url": "https://www.adobe.com/legal/terms.html",
+      "language": "en",
+      "category": "Software"
+    },
+    {
+      "id": 36,
+      "name": "Canva",
+      "url": "https://www.canva.com/policies/terms-of-use/",
+      "language": "en",
+      "category": "Design"
+    },
+    {
+      "id": 37,
+      "name": "Figma",
+      "url": "https://www.figma.com/tos/",
+      "language": "en",
+      "category": "Design"
+    },
+    {
+      "id": 38,
+      "name": "Trello",
+      "url": "https://www.atlassian.com/legal/cloud-terms-of-service",
+      "language": "en",
+      "category": "Productivity"
+    },
+    {
+      "id": 39,
+      "name": "Asana",
+      "url": "https://asana.com/terms",
+      "language": "en",
+      "category": "Productivity"
+    },
+    {
+      "id": 40,
+      "name": "Monday.com",
+      "url": "https://monday.com/l/terms/terms-of-service/",
+      "language": "en",
+      "category": "Productivity"
+    },
+    {
+      "id": 41,
+      "name": "Salesforce",
+      "url": "https://www.salesforce.com/company/legal/agreements/",
+      "language": "en",
+      "category": "CRM"
+    },
+    {
+      "id": 42,
+      "name": "HubSpot",
+      "url": "https://legal.hubspot.com/terms-of-service",
+      "language": "en",
+      "category": "CRM"
+    },
+    {
+      "id": 43,
+      "name": "Mailchimp",
+      "url": "https://mailchimp.com/legal/terms/",
+      "language": "en",
+      "category": "Email Marketing"
+    },
+    {
+      "id": 44,
+      "name": "WordPress.com",
+      "url": "https://wordpress.com/tos/",
+      "language": "en",
+      "category": "CMS"
+    },
+    {
+      "id": 45,
+      "name": "Medium",
+      "url": "https://policy.medium.com/medium-terms-of-service-9db0094a1e0f",
+      "language": "en",
+      "category": "Publishing"
+    },
+    {
+      "id": 46,
+      "name": "Substack",
+      "url": "https://substack.com/tos",
+      "language": "en",
+      "category": "Publishing"
+    },
+    {
+      "id": 47,
+      "name": "OpenAI",
+      "url": "https://openai.com/terms/",
+      "language": "en",
+      "category": "AI"
+    },
+    {
+      "id": 48,
+      "name": "Anthropic",
+      "url": "https://www.anthropic.com/legal/consumer-terms",
+      "language": "en",
+      "category": "AI"
+    },
+    {
+      "id": 49,
+      "name": "AWS",
+      "url": "https://aws.amazon.com/service-terms/",
+      "language": "en",
+      "category": "Cloud Services"
+    },
+    {
+      "id": 50,
+      "name": "Google Cloud",
+      "url": "https://cloud.google.com/terms",
+      "language": "en",
+      "category": "Cloud Services"
+    }
+  ]
+}

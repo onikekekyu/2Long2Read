@@ -1,9 +1,9 @@
 # Utiliser la même base que l'API pour la cohérence
 FROM python:3.11-slim
 WORKDIR /app
-COPY requirements.txt .
 
-# Installer les dépendances
+# Copier et installer les dépendances
+COPY requirements.txt .
 RUN pip install uv && uv pip install --no-cache-dir --system -r requirements.txt
 
 # Copier le code source nécessaire au worker
@@ -11,5 +11,9 @@ COPY ./worker.py .
 COPY ./ai_analyzer.py .
 COPY ./config ./config
 
-# Commande pour lancer le worker au démarrage
-CMD ["python", "worker.py"]
+# Rendre le worker exécutable
+RUN chmod +x worker.py
+
+# Le worker sera lancé par Airflow avec des arguments spécifiques
+# Pas de CMD par défaut - Airflow fournira la commande
+ENTRYPOINT ["python", "worker.py"]

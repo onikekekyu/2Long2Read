@@ -1,0 +1,32 @@
+# Airflow Helm Values - Simplified Configuration
+# Use KubernetesExecutor for pod-based task execution
+
+executor: KubernetesExecutor
+
+# Disable PostgreSQL - use SQLite for simplicity
+postgresql:
+  enabled: false
+
+# Use external database (SQLite via persistence)
+data:
+  metadataConnection:
+    user: airflow
+    pass: airflow
+    protocol: sqlite
+    host: ~
+    port: ~
+    db: /opt/airflow/airflow.db
+
+# Airflow webserver configuration
+webserver:
+  defaultUser:
+    enabled: true
+    role: Admin
+    username: admin
+    password: admin
+    email: admin@example.com
+
+# Disable GitSync (not needed for now)
+dags:
+  gitSync:
+    enabled: false

@@ -1,21 +1,13 @@
-# Airflow Helm Values - Simplified Configuration
+# Airflow Helm Values - Working Configuration
 # Use KubernetesExecutor for pod-based task execution
 
 executor: KubernetesExecutor
 
-# Disable PostgreSQL - use SQLite for simplicity
+# PostgreSQL with latest tag
 postgresql:
-  enabled: false
-
-# Use external database (SQLite via persistence)
-data:
-  metadataConnection:
-    user: airflow
-    pass: airflow
-    protocol: sqlite
-    host: ~
-    port: ~
-    db: /opt/airflow/airflow.db
+  enabled: true
+  image:
+    tag: latest
 
 # Airflow webserver configuration
 webserver:
@@ -26,7 +18,18 @@ webserver:
     password: admin
     email: admin@example.com
 
-# Disable GitSync (not needed for now)
+# Disable GitSync - use ConfigMap for DAGs
 dags:
   gitSync:
     enabled: false
+
+# Mount DAGs from ConfigMap
+extraVolumes:
+  - name: dag-volume
+    configMap:
+      name: airflow-dags
+
+extraVolumeMounts:
+  - name: dag-volume
+    mountPath: /opt/airflow/dags
+    readOnly: true

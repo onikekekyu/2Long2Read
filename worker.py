@@ -88,10 +88,11 @@ def main():
             {"task_id": args.task_id},
             {"$set": {
                 "status": "completed",
+                "source_name": args.source_name,  # ✅ AJOUT: Sauvegarder le source_name
                 "report": analysis_report
             }}
         )
-        print(f"[WORKER] Task {args.task_id} finished and saved to MongoDB", file=sys.stderr)
+        print(f"[WORKER] Task {args.task_id} finished and saved to MongoDB (source: {args.source_name})", file=sys.stderr)
         sys.exit(0)
 
     except Exception as e:

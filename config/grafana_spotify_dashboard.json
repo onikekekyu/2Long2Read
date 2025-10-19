@@ -1,0 +1,187 @@
+{
+  "dashboard": {
+    "title": "Spotify Terms & Conditions - Risk Analysis",
+    "tags": ["2long2read", "spotify", "terms"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 0},
+        "type": "gauge",
+        "title": "Global Risk Score",
+        "targets": [
+          {
+            "expr": "cgu_last_risk_score{source_name=\"spotify\"}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 40, "color": "yellow"},
+                {"value": 70, "color": "red"}
+              ]
+            },
+            "unit": "none"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 0},
+        "type": "stat",
+        "title": "Dangerous Clauses",
+        "targets": [
+          {
+            "expr": "cgu_problematic_clauses{source_name=\"spotify\"}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "textMode": "value_and_name"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 5, "color": "orange"},
+                {"value": 10, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "gridPos": {"h": 8, "w": 8, "x": 16, "y": 0},
+        "type": "stat",
+        "title": "Total Analyses",
+        "targets": [
+          {
+            "expr": "cgu_analyses_count{source_name=\"spotify\"}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "blue"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
+        "type": "bargauge",
+        "title": "Risk Scores by Dimension",
+        "targets": [
+          {
+            "expr": "cgu_data_privacy_score{source_name=\"spotify\"}",
+            "legendFormat": "Data Privacy",
+            "refId": "A"
+          },
+          {
+            "expr": "cgu_intellectual_property_score{source_name=\"spotify\"}",
+            "legendFormat": "Intellectual Property",
+            "refId": "B"
+          },
+          {
+            "expr": "cgu_termination_risk_score{source_name=\"spotify\"}",
+            "legendFormat": "Termination Risk",
+            "refId": "C"
+          },
+          {
+            "expr": "cgu_legal_protection_score{source_name=\"spotify\"}",
+            "legendFormat": "Legal Protection",
+            "refId": "D"
+          },
+          {
+            "expr": "cgu_transparency_score{source_name=\"spotify\"}",
+            "legendFormat": "Transparency",
+            "refId": "E"
+          },
+          {
+            "expr": "cgu_liability_score{source_name=\"spotify\"}",
+            "legendFormat": "Liability",
+            "refId": "F"
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 40, "color": "yellow"},
+                {"value": 70, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 18},
+        "type": "timeseries",
+        "title": "Risk Score History",
+        "targets": [
+          {
+            "expr": "cgu_last_risk_score{source_name=\"spotify\"}",
+            "legendFormat": "Overall Risk",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10
+            },
+            "min": 0,
+            "max": 100
+          }
+        }
+      }
+    ]
+  },
+  "overwrite": true
+}

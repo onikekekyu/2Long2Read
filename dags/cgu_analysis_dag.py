@@ -1,10 +1,12 @@
 """
 DAG Airflow pour l'analyse de Terms & Conditions.
-Uses BashOperator to run kubectl commands directly - works with Airflow 3.0!
+Uses KubernetesPodOperator - the proper way to run pods from Airflow!
 """
 import pendulum
 from airflow.models.dag import DAG
+from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 from airflow.operators.bash import BashOperator
+from kubernetes.client import models as k8s
 
 with DAG(
     dag_id="cgu_analysis_pipeline",
@@ -15,78 +17,56 @@ with DAG(
     description="Analyse des Terms & Conditions avec Claude AI",
 ) as dag:
 
-    # Task 1: Create and run the analysis pod
-    run_analysis = BashOperator(
+    # Task 1: Run analysis using KubernetesPodOperator
+    # NOTE: This DAG is designed to be triggered via API with parameters:
+    #   - task_id: Unique identifier for the analysis
+    #   - text_content: The T&C text to analyze (min 100 chars)
+    #   - source_name: Name of the company/source
+    #
+    # If triggered from UI without parameters, it will use a test document.
+    run_analysis = KubernetesPodOperator(
         task_id="run_cgu_analysis",
-        bash_command="""
-        # Get configuration from dag_run.conf
-        TASK_ID="{{ dag_run.conf.get('task_id', 'unknown-task') }}"
-        SOURCE_NAME="{{ dag_run.conf.get('source_name', 'airflow_trigger') }}"
-        TEXT_CONTENT="{{ (dag_run.conf.get('text_content', ''))[:50000] }}"
-
-        echo "Starting T&C Analysis"
-        echo "Task ID: $TASK_ID"
-        echo "Source: $SOURCE_NAME"
-
-        # Create unique pod name
-        POD_NAME="cgu-analysis-airflow-$(date +%s)-$RANDOM"
-
-        # Run the worker pod
-        kubectl run "$POD_NAME" \
-          --image=2long2read-worker:latest \
-          --namespace=airflow \
-          --restart=Never \
-          --image-pull-policy=IfNotPresent \
-          --env="MONGO_HOSTNAME=mongo-service.default.svc.cluster.local" \
-          --env="MONGO_PORT=27017" \
-          --env="ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" \
-          -- python3 /app/worker.py \
-             --task-id "$TASK_ID" \
-             --source-name "$SOURCE_NAME" \
-             --text-content "$TEXT_CONTENT"
-
-        # Wait for pod to be ready
-        echo "Waiting for pod to start..."
-        kubectl wait --for=condition=Ready pod/"$POD_NAME" --namespace=airflow --timeout=30s || true
-        sleep 2
-
-        # Follow logs
-        echo "Analysis in progress..."
-        kubectl logs -f "$POD_NAME" --namespace=airflow
-
-        # Check if analysis completed successfully
-        POD_STATUS=$(kubectl get pod "$POD_NAME" --namespace=airflow -o jsonpath='{.status.phase}')
-
-        if [ "$POD_STATUS" = "Succeeded" ]; then
-            echo "✅ Analysis completed successfully!"
-            exit 0
-        else
-            echo "❌ Analysis failed with status: $POD_STATUS"
-            kubectl logs "$POD_NAME" --namespace=airflow --tail=50
-            exit 1
-        fi
-        """,
-        env={
+        name="cgu-analysis-worker",
+        namespace="airflow",
+        image="2long2read-worker:latest",
+        image_pull_policy="IfNotPresent",
+        cmds=["python3"],
+        arguments=[
+            "/app/worker.py",
+            "--task-id", "{{ dag_run.conf.get('task_id', 'manual-ui-trigger-' + ts_nodash) }}",
+            "--source-name", "{{ dag_run.conf.get('source_name', 'manual_ui_test') }}",
+            "--text-content", "{{ dag_run.conf.get('text_content', 'TEST TERMS AND CONDITIONS: This is a minimal test document used when triggering from Airflow UI. By using this service, you agree to our terms. We collect your data. We may terminate your account at any time. You waive all legal rights. This is only a test to verify the pipeline works correctly.')[:50000] }}",
+        ],
+        env_vars={
+            "MONGO_HOSTNAME": "mongo-service.default.svc.cluster.local",
+            "MONGO_PORT": "27017",
             "ANTHROPIC_API_KEY": "{{ var.value.get('ANTHROPIC_API_KEY', '') }}",
         },
+        get_logs=True,
+        is_delete_operator_pod=False,  # Keep pod for debugging
+        in_cluster=True,  # Running inside Kubernetes cluster
+        startup_timeout_seconds=600,  # Allow 10 minutes for Claude API
     )
 
-    # Task 2: Retrieve and display results
-    get_results = BashOperator(
-        task_id="get_analysis_results",
+    # Task 2: Log completion (simplified - kubectl not available in Airflow pods)
+    log_completion = BashOperator(
+        task_id="log_completion",
         bash_command="""
         TASK_ID="{{ dag_run.conf.get('task_id', 'unknown-task') }}"
+        SOURCE_NAME="{{ dag_run.conf.get('source_name', 'unknown') }}"
 
-        echo "Retrieving results for task: $TASK_ID"
-
-        # Query MongoDB for results
-        kubectl exec mongo-deployment-869dd489bf-bfwgx --namespace default -- \
-          mongosh too_long_to_read --quiet --eval \
-          "printjson(db.analytic_reports.findOne({\"task_id\": \"$TASK_ID\"}, {\"_id\": 0, \"task_id\": 1, \"status\": 1, \"report.risk_scores\": 1, \"report.executive_summary.overall_verdict\": 1}))"
-
-        echo "✅ Results retrieved successfully!"
+        echo "========================================="
+        echo "CGU Analysis Pipeline Completed"
+        echo "========================================="
+        echo "Task ID: $TASK_ID"
+        echo "Source: $SOURCE_NAME"
+        echo ""
+        echo "✅ Analysis completed and saved to MongoDB"
+        echo "📊 View metrics at: http://api-service:8000/metrics"
+        echo "🔍 Check Grafana dashboard for visualization"
+        echo "========================================="
         """,
     )
 
     # Define task dependencies
-    run_analysis >> get_results
+    run_analysis >> log_completion

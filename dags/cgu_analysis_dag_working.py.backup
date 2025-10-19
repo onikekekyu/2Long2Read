@@ -1,0 +1,212 @@
+"""
+DAG Airflow FONCTIONNEL pour l'analyse de Terms & Conditions Spotify.
+Utilise BashOperator pour créer les pods workers directement via kubectl.
+"""
+import pendulum
+from airflow.models.dag import DAG
+from airflow.operators.bash import BashOperator
+from datetime import timedelta
+
+# Configuration par défaut du DAG
+default_args = {
+    'owner': '2long2read',
+    'depends_on_past': False,
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=2),
+}
+
+with DAG(
+    dag_id="spotify_cgu_analysis",
+    default_args=default_args,
+    description="Analyse complète des CGU Spotify avec Claude AI",
+    schedule=None,  # Manual trigger only
+    start_date=pendulum.datetime(2025, 1, 1, tz="UTC"),
+    catchup=False,
+    tags=["2long2read", "spotify", "production"],
+) as dag:
+
+    # Task 1: Créer et lancer le worker pod pour Spotify
+    analyze_spotify = BashOperator(
+        task_id="analyze_spotify_terms",
+        bash_command="""
+        set -e
+
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "🎵 AIRFLOW: Analyse Spotify Terms & Conditions"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+        # Configuration
+        TASK_ID="spotify-airflow-$(date +%Y%m%d-%H%M%S)"
+        SPOTIFY_FILE="/opt/airflow/dags/raw_data/spotify_tc.txt"
+        NAMESPACE="airflow"
+
+        echo "📋 Task ID: $TASK_ID"
+        echo "📄 Source: Spotify Terms & Conditions"
+
+        # Lire le contenu (10000 premiers caractères)
+        if [ -f "$SPOTIFY_FILE" ]; then
+            CONTENT=$(head -c 10000 "$SPOTIFY_FILE" | base64 -w 0)
+            echo "✅ Fichier Spotify chargé: $(echo $CONTENT | wc -c) bytes (base64)"
+        else
+            echo "⚠️  Fichier $SPOTIFY_FILE non trouvé, utilisation contenu test"
+            CONTENT=$(echo "SPOTIFY TERMS: Standard streaming terms with arbitration." | base64 -w 0)
+        fi
+
+        # Créer le manifest YAML
+        POD_NAME="worker-$TASK_ID"
+
+        cat > /tmp/${POD_NAME}.yaml <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: $POD_NAME
+  namespace: $NAMESPACE
+  labels:
+    app: 2long2read-worker
+    task-id: "$TASK_ID"
+    source: "spotify"
+    triggered-by: "airflow"
+spec:
+  restartPolicy: Never
+  containers:
+  - name: worker
+    image: 2long2read-worker:latest
+    imagePullPolicy: IfNotPresent
+    command: ["sh", "-c"]
+    args:
+      - |
+        echo "📥 Décodage du contenu..."
+        echo "$CONTENT" | base64 -d > /tmp/content.txt
+        echo "🚀 Analyse en cours..."
+        python3 /app/worker.py \\
+          --task-id "$TASK_ID" \\
+          --source-name "spotify" \\
+          --text-content "\$(cat /tmp/content.txt)"
+    env:
+      - name: MONGO_HOSTNAME
+        value: "mongo-service.default.svc.cluster.local"
+      - name: MONGO_PORT
+        value: "27017"
+      - name: ANTHROPIC_API_KEY
+        value: "$ANTHROPIC_API_KEY"
+      - name: CONTENT_BASE64
+        value: "$CONTENT"
+EOF
+
+        # Créer le pod
+        echo ""
+        echo "🚀 Création du worker pod..."
+        kubectl apply -f /tmp/${POD_NAME}.yaml
+
+        echo "✅ Pod créé: $POD_NAME"
+        echo ""
+
+        # Attendre que le pod démarre
+        echo "⏳ Attente du démarrage (max 60s)..."
+        kubectl wait --for=condition=Ready pod/$POD_NAME -n $NAMESPACE --timeout=60s || true
+
+        # Suivre les logs
+        echo ""
+        echo "📋 Logs du worker:"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        kubectl logs -f $POD_NAME -n $NAMESPACE 2>&1 || kubectl logs $POD_NAME -n $NAMESPACE 2>&1
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+        # Attendre la fin (max 5 min)
+        echo ""
+        echo "⏳ Attente de la fin de l'analyse (max 5 min)..."
+        kubectl wait --for=condition=Completed pod/$POD_NAME -n $NAMESPACE --timeout=300s 2>&1 || true
+
+        # Vérifier le statut final
+        POD_STATUS=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.status.phase}' 2>/dev/null || echo "Unknown")
+
+        echo ""
+        echo "📊 Statut final: $POD_STATUS"
+
+        if [ "$POD_STATUS" = "Succeeded" ] || [ "$POD_STATUS" = "Completed" ]; then
+            echo "✅ Analyse terminée avec succès!"
+            echo "💾 Task ID: $TASK_ID"
+
+            # Sauvegarder le task ID pour la prochaine tâche
+            echo "$TASK_ID" > /tmp/last_task_id.txt
+
+            exit 0
+        else
+            echo "❌ Analyse échouée: $POD_STATUS"
+            kubectl logs $POD_NAME -n $NAMESPACE --tail=30 2>&1 || true
+            exit 1
+        fi
+        """,
+        env={
+            "ANTHROPIC_API_KEY": "{{ var.value.get('ANTHROPIC_API_KEY', '') }}",
+        },
+        execution_timeout=timedelta(minutes=10),
+    )
+
+    # Task 2: Récupérer et afficher les résultats de MongoDB
+    get_results = BashOperator(
+        task_id="get_mongodb_results",
+        bash_command="""
+        set -e
+
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "💾 RÉCUPÉRATION DES RÉSULTATS MONGODB"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+        # Récupérer le task ID de la tâche précédente
+        if [ -f /tmp/last_task_id.txt ]; then
+            TASK_ID=$(cat /tmp/last_task_id.txt)
+        else
+            echo "⚠️  Task ID non trouvé, recherche de la dernière analyse Spotify..."
+            # Récupérer la dernière analyse Spotify
+            MONGO_POD=$(kubectl get pods -n default -l app=mongo -o jsonpath='{.items[0].metadata.name}')
+            TASK_ID=$(kubectl exec $MONGO_POD -n default -- \
+                mongosh too_long_to_read --quiet --eval \
+                'db.analytic_reports.find({"source_name":"spotify"}).sort({"_id":-1}).limit(1).toArray()[0].task_id' | tail -1)
+        fi
+
+        echo "🔍 Task ID: $TASK_ID"
+        echo ""
+
+        # Récupérer le pod MongoDB
+        MONGO_POD=$(kubectl get pods -n default -l app=mongo -o jsonpath='{.items[0].metadata.name}')
+
+        echo "📊 Résultats de l'analyse:"
+        echo ""
+
+        # Afficher le résumé
+        kubectl exec $MONGO_POD -n default -- \
+            mongosh too_long_to_read --quiet --eval "
+            var doc = db.analytic_reports.findOne({\\\"task_id\\\": \\\"$TASK_ID\\\"});
+            if (doc) {
+                print('✅ Status: ' + doc.status);
+                print('');
+                print('📊 SCORES DE RISQUE:');
+                print('  Overall: ' + doc.report.risk_scores.overall + '/100');
+                print('  Data Privacy: ' + doc.report.risk_scores.data_privacy + '/100');
+                print('  User Rights: ' + doc.report.risk_scores.user_rights + '/100');
+                print('  Legal Protection: ' + doc.report.risk_scores.legal_protection + '/100');
+                print('  Termination Risk: ' + doc.report.risk_scores.termination_risk + '/100');
+                print('  Transparency: ' + doc.report.risk_scores.transparency + '/100');
+                print('');
+                print('🔴 Clauses dangereuses: ' + doc.report.dangerous_clauses.length);
+                print('');
+                print('📝 Verdict: ' + doc.report.executive_summary.overall_verdict);
+            } else {
+                print('❌ Document non trouvé pour task_id: $TASK_ID');
+            }
+            "
+
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "✅ Analyse complète disponible dans MongoDB"
+        echo "📊 Consultez Grafana pour la visualisation"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        """,
+        execution_timeout=timedelta(minutes=2),
+    )
+
+    # Définir les dépendances
+    analyze_spotify >> get_results

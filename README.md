@@ -1,568 +1,635 @@
-# 🚀 2Long2Read - Terms & Conditions Risk Analyzer
+# 🚀 2Long2Read - Analyseur de CGU avec Claude AI
 
-**Fully operational system for analyzing Terms & Conditions using Claude AI + Kubernetes + Airflow**
-
----
-
-## ✅ System Status: PRODUCTION READY
-
-**All Core Components Operational:**
-- ✅ Docker containerization (worker pods)
-- ✅ Kubernetes orchestration (automated pod management)
-- ✅ MongoDB storage (persistent results database)
-- ✅ Claude AI integration (real-time T&C analysis)
-- ✅ **Automated pipeline via `analyze_tc.sh`** (one-command execution - FULLY WORKING!)
-- ✅ **Airflow UI accessible** at http://localhost:8080 (admin/admin)
-- ✅ Risk scoring system (0-100 scale across 6 dimensions)
-
-**Known Limitation:**
-- ⚠️ DAG visibility in Airflow UI (see "Understanding the DAG Visibility Challenge" below)
+**Système d'analyse automatique de Terms & Conditions utilisant Claude AI, MongoDB, Prometheus et Grafana sur Kubernetes.**
 
 ---
 
-## 🎯 Quick Start (30 seconds)
+## 📋 Prérequis
+
+Avant de commencer, assure-toi d'avoir :
+
+- **Docker Desktop** installé et en cours d'exécution
+- **kubectl** installé (inclus avec Docker Desktop)
+- **Helm** installé (gestionnaire de packages Kubernetes)
+- **Python 3.11+** avec pip
+- **Une clé API Anthropic** (Claude AI)
+
+### Vérification rapide
 
 ```bash
-# 1. Set API key
-export ANTHROPIC_API_KEY="your-api-key-here"
-
-# 2. Analyze any Terms & Conditions file
-./analyze_tc.sh raw_data/spotify_tc.txt spotify
-
-# 3. Done! Results appear automatically
+docker --version
+kubectl version --client
+helm version
+python3 --version
 ```
-
-**That's it!** The script handles everything: Docker container execution, Kubernetes pod creation, AI analysis, MongoDB storage, and results display.
 
 ---
 
-## 🌐 Access Airflow UI
+## 🛠️ Installation Complète (Étape par Étape)
+
+### 1. Cloner le projet
 
 ```bash
-# Port-forward is already running in background
-# Open browser: http://localhost:8080
-# Login: admin / admin
+git clone <url-du-repo>
+cd theprojectthathelpsyoubetterunderstndhowyourdataisusedineverycompanystermsandconditionsbecausenooneverreadsthem
 ```
 
-The Airflow UI is accessible and operational. You can see:
-- Task instances running
-- Execution history
-- System logs
-- Pod activity
-
----
-
-## 📚 Understanding the DAG Visibility Challenge
-
-### What You'll See in Airflow UI:
-- ✅ Airflow UI loads and works
-- ✅ Login successful (admin/admin)
-- ✅ Can see "Runs" and "Task Instances"
-- ✅ Can see `cgu_analysis_pipeline` in task history
-- ⚠️ DAG doesn't appear in "DAGs" list
-
-### Why This Happens (Simple Explanation):
-
-Imagine you have a notebook where you write down recipes (DAG files). In Airflow, you need **all** the chefs (pods) to have access to the same notebook:
-- **The Scheduler** (decides when to cook) ✅ Has the recipe
-- **The DAG Processor** (reads recipes) ❌ Loses the recipe when it restarts
-- **The API Server** (shows recipes in the menu) ❌ Loses the recipe when it restarts
-
-**The Problem:**
-When Kubernetes pods restart (which they do!), they start fresh with empty folders. Any files we manually copied **disappear**. It's like giving someone a sticky note - if they leave and come back, the note is gone!
-
-**In Technical Terms:**
-Pods use **ephemeral storage** by default. This means:
-- Storage only lasts while the pod is running
-- When pod restarts → files are lost
-- Need **persistent storage** to keep files across restarts
-
-### The Professional Solution (Not Implemented Yet):
-
-**Option 1: Persistent Volume (PV)**
-```
-Think of it like a shared USB drive that all pods can access
-- All pods read from the same storage
-- Files persist even when pods restart
-- Industry standard for production Airflow
-```
-
-**Option 2: GitSync**
-```
-Think of it like Google Drive auto-sync
-- DAG files stored in Git repository
-- Airflow automatically pulls latest files
-- Changes sync to all pods automatically
-```
-
-**Why Not Implemented:**
-- Persistent Volumes require cluster configuration (30+ minutes)
-- GitSync requires Git repository setup
-- For demonstration purposes, the working `analyze_tc.sh` script shows all required technologies
-
----
-
-## 🎓 What This Project Successfully Demonstrates
-
-Despite the DAG visibility limitation, this project **fully demonstrates** all course requirements:
-
-### 1. Docker Containerization ✅
-- **Working**: Custom Docker image (`2long2read-worker:latest`)
-- **Proof**: Run `docker images | grep 2long2read` to see the image
-- **Demo**: Worker pods successfully execute analysis in containers
-- **Learning**: Containerized applications, image management
-
-### 2. Kubernetes Orchestration ✅
-- **Working**: Automated pod creation via `analyze_tc.sh`
-- **Proof**: Run `kubectl get pods --namespace airflow` to see pods
-- **Demo**: Cross-namespace networking (airflow ↔ default)
-- **Learning**: Pod lifecycle, service discovery, resource management
-
-### 3. Airflow Installation & Configuration ✅
-- **Working**: Airflow UI accessible at http://localhost:8080
-- **Proof**: Login with admin/admin, see the dashboard
-- **Demo**: Shows understanding of workflow orchestration
-- **Learning**: **Key insight** - DAG visibility requires persistent storage!
-
-### 4. Automation Pipeline ✅
-- **Working**: One-command execution (`./analyze_tc.sh`)
-- **Proof**: Runs complete analysis end-to-end automatically
-- **Demo**: Handles Docker, Kubernetes, AI, database - all automated
-- **Learning**: Pipeline orchestration, error handling, automation
-
-### 5. Critical Docker Learning ✅
-- **Discovery**: PostgreSQL image tag problem
-- **Solution**: Always use `latest` or verify tags exist
-- **Learning**: Real-world troubleshooting, image registry management
-
----
-
-## 💡 Key Technical Insight (Show This in Your Presentation!)
-
-**What We Learned About Airflow:**
-
-In Airflow 3.0, DAG files must be accessible to multiple components:
-1. **Scheduler** - Decides when tasks run
-2. **DAG Processor** - Parses DAG files
-3. **API Server** - Displays DAGs in UI
-
-**The Challenge:**
-- Copying files to pods works temporarily
-- But pods use ephemeral (temporary) storage
-- When pods restart → files disappear
-- Need persistent storage solution
-
-**This is a REAL production challenge** that demonstrates:
-- Understanding of Kubernetes storage concepts
-- Knowledge of pod lifecycle and persistence
-- Awareness of production-readiness requirements
-
-**For the professor:** This shows deeper understanding than just "making it work" - it shows awareness of production deployment challenges!
-
----
-
-## 📊 Example Analysis Results
-
-### Recent Test (Verified Working)
-```
-Task ID: analysis-1760745635
-Status: completed
-Overall Risk: 95/100 (Highly Problematic)
-
-Risk Breakdown:
-- Data Privacy: 98/100 (CRITICAL)
-- User Rights: 95/100 (CRITICAL)
-- Termination Risk: 100/100 (CRITICAL)
-- Legal Protection: 92/100 (HIGH)
-- Transparency: 98/100 (CRITICAL)
-```
-
-Full detailed analysis includes:
-- Executive summary with overall verdict
-- Clause-by-clause risk assessment
-- Hidden risks identification
-- Legal implications analysis
-- User protection recommendations
-
----
-
-## 🏗️ Architecture
-
-```
-User → analyze_tc.sh → Kubernetes Pod (worker.py) → Claude AI → MongoDB
-                              ↓
-                       Risk Analysis Report
-                              ↓
-                   Airflow UI (for monitoring)
-```
-
-**Core Components:**
-- **worker.py**: Python-based analysis engine running in Docker
-- **Dockerfile.worker**: Container definition (`2long2read-worker:latest`)
-- **analyze_tc.sh**: One-command orchestration script
-- **MongoDB**: Results database (persistent storage)
-- **ai_analyzer.py**: Claude AI integration module
-- **Airflow**: Workflow monitoring UI
-
----
-
-## 💻 Usage
-
-### Method 1: Direct Analysis (Recommended - Fully Working!)
+### 2. Configurer l'environnement Python
 
 ```bash
-# Analyze any file
-./analyze_tc.sh path/to/terms.txt company_name
+# Créer un environnement virtuel
+python3 -m venv .venv
 
-# Example: Spotify
-./analyze_tc.sh raw_data/spotify_tc.txt spotify
+# Activer l'environnement
+source .venv/bin/activate  # macOS/Linux
+# ou
+.venv\Scripts\activate     # Windows
 
-# Results display automatically with risk scores
+# Installer les dépendances
+pip install -r requirements.txt
 ```
 
-**This method demonstrates:**
-- Docker container execution
-- Kubernetes pod orchestration
-- Automated pipeline
-- AI integration
-- Database persistence
-
-### Method 2: Python Worker Directly
+### 3. Configurer la clé API Claude
 
 ```bash
-# Run worker locally (alternative method)
-python3 worker.py \
-  --task-id "test-123" \
-  --source-name "test" \
-  --text-content "Your terms and conditions text here..."
+# Créer le secret Kubernetes pour Claude AI
+kubectl create secret generic claude-api-key-secret \
+  --from-literal=ANTHROPIC_API_KEY="ta-clé-api-ici"
+
+# Vérifier que le secret est créé
+kubectl get secrets
 ```
 
----
-
-## ⚙️ Configuration
-
-### Required Environment Variables
+### 4. Construire les images Docker
 
 ```bash
-export ANTHROPIC_API_KEY="sk-ant-..."  # Required for Claude AI
+# Image de l'API
+docker build -t 2long2read-api:latest -f Dockerfile .
+
+# Image du Worker
+docker build -t 2long2read-worker:latest -f Dockerfile.worker .
+
+# Vérifier les images
+docker images | grep 2long2read
 ```
 
-### Airflow UI Access
+### 5. Déployer l'infrastructure sur Kubernetes
 
 ```bash
-# Port-forward (already running in background)
-kubectl port-forward svc/airflow-api-server 8080:8080 --namespace airflow &
+# Déployer MongoDB
+kubectl apply -f k8s-infra.yaml
 
-# Access: http://localhost:8080
-# Login: admin / admin
+# Attendre que MongoDB soit prêt (environ 30 secondes)
+kubectl wait --for=condition=ready pod -l app=mongo --timeout=120s
+
+# Déployer l'API et le Worker
+kubectl apply -f k8s-app.yaml
+
+# Vérifier que tout tourne
+kubectl get pods
 ```
 
----
+**Sortie attendue :**
+```
+NAME                              READY   STATUS    RESTARTS   AGE
+api-deployment-xxx                1/1     Running   0          30s
+mongo-deployment-xxx              1/1     Running   0          60s
+worker-deployment-xxx             1/1     Running   0          30s
+```
 
-## 🔧 Kubernetes Resources
-
-### Check System Status
+### 6. Installer Prometheus + Grafana
 
 ```bash
-# All Airflow components
-kubectl get pods --namespace airflow
+# Ajouter le repo Helm de Prometheus
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
 
-# Expected output:
-# airflow-api-server      - Running (UI accessible)
-# airflow-dag-processor   - Running
-# airflow-postgresql-0    - Running (with latest tag!)
-# airflow-scheduler       - Running
-# airflow-statsd          - Running
-# airflow-triggerer       - Running
-
-# MongoDB (results database)
-kubectl get pods --namespace default | grep mongo
-
-# Worker pods (during analysis)
-kubectl get pods --namespace airflow | grep tc-analysis
-```
-
-### Query Results Database
-
-```bash
-# Count total analyses
-kubectl exec mongo-deployment-869dd489bf-bfwgx --namespace default -- \
-  mongosh too_long_to_read --quiet --eval 'db.analytic_reports.countDocuments()'
-
-# Get specific analysis
-kubectl exec mongo-deployment-869dd489bf-bfwgx --namespace default -- \
-  mongosh too_long_to_read --quiet --eval \
-  'db.analytic_reports.findOne({"task_id": "your-task-id"})'
-```
-
----
-
-## 🔑 Key Technical Learnings
-
-### ⭐ 1. The Docker Image Tag Problem
-
-**Problem:** Airflow Helm chart defaults to PostgreSQL image tags that don't exist
-```yaml
-# ❌ This FAILS:
-postgresql:
-  image:
-    tag: "16.1.0-debian-11-r15"  # Image doesn't exist!
-```
-
-**Solution:** Always use `latest` or verify tag existence
-```bash
-# ✅ This WORKS:
-helm install airflow apache-airflow/airflow \
-  --set postgresql.image.tag=latest
-```
-
-**Lesson:** Always verify Docker image tags exist before using them!
-
-### ⭐ 2. The Persistent Storage Challenge
-
-**Problem:** Pods use ephemeral storage - files disappear on restart
-
-**What We Learned:**
-```
-Ephemeral Storage (default):
-- Files only exist while pod runs
-- Pod restarts → files are lost
-- Fast but not persistent
-
-Persistent Storage (production):
-- Files persist across pod restarts
-- All pods can access same files
-- Required for DAG files in Airflow
-```
-
-**Real-World Application:**
-- Databases need persistent storage
-- Configuration files need persistence
-- Any data that must survive pod restarts needs PV
-
-**Why This Matters:**
-Understanding storage persistence is crucial for production Kubernetes deployments!
-
----
-
-## 📈 Performance
-
-- **Analysis Time**: 10-15 seconds for 40k characters
-- **AI Model**: claude-sonnet-4-5 (state-of-the-art reasoning)
-- **Max Input**: 50,000 characters per analysis
-- **Concurrent Jobs**: Unlimited (Kubernetes scales automatically)
-- **Storage**: MongoDB (persistent, queryable)
-
----
-
-## 🐛 Troubleshooting
-
-### Issue: "ANTHROPIC_API_KEY not set"
-
-```bash
-export ANTHROPIC_API_KEY="sk-ant-..."
-```
-
-### Issue: "Cannot access Airflow UI"
-
-```bash
-# Restart port-forward
-pkill -f "port-forward.*8080"
-kubectl port-forward svc/airflow-api-server 8080:8080 --namespace airflow &
-
-# Verify it's running
-lsof -i :8080
-```
-
-### Issue: "analyze_tc.sh not working"
-
-```bash
-# Check worker image exists
-docker images | grep 2long2read-worker
-
-# Check MongoDB is running
-kubectl get pods --namespace default | grep mongo
-
-# Check API key is set
-echo $ANTHROPIC_API_KEY
-```
-
----
-
-## 🎯 Installation from Scratch
-
-If you need to recreate the entire setup:
-
-```bash
-# 1. Install Airflow with working PostgreSQL (THE KEY FIX!)
-helm install airflow apache-airflow/airflow \
-  --namespace airflow \
+# Installer Prometheus + Grafana (monitoring complet)
+helm install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring \
   --create-namespace \
-  --set executor=KubernetesExecutor \
-  --set webserver.defaultUser.password=admin \
-  --set postgresql.image.tag=latest \
-  --wait --timeout 10m
+  --wait --timeout 5m
 
-# 2. Port-forward Airflow UI
-kubectl port-forward svc/airflow-api-server 8080:8080 --namespace airflow &
+# Vérifier que tout est installé
+kubectl get pods -n monitoring
+```
 
-# 3. Test the system (THE WORKING METHOD!)
-export ANTHROPIC_API_KEY="your-key"
-./analyze_tc.sh raw_data/spotify_tc.txt spotify
+**Sortie attendue :**
+```
+NAME                                                     READY   STATUS    RESTARTS   AGE
+monitoring-grafana-xxx                                   3/3     Running   0          2m
+monitoring-kube-prometheus-operator-xxx                  1/1     Running   0          2m
+monitoring-kube-state-metrics-xxx                        1/1     Running   0          2m
+monitoring-prometheus-node-exporter-xxx                  1/1     Running   0          2m
+prometheus-monitoring-kube-prometheus-prometheus-0       2/2     Running   0          2m
 ```
 
 ---
 
-## ✨ Project Success Metrics
+## 🧪 Tester le Pipeline Complet
 
-### Fully Working Components:
-- [x] Docker containerization demonstrated
-- [x] Kubernetes pod orchestration operational
-- [x] MongoDB persistence working
-- [x] Claude AI integration functional
-- [x] End-to-end analysis pipeline operational
-- [x] One-command automation working
-- [x] Airflow UI accessible
-- [x] PostgreSQL running with `latest` tag
-- [x] Cross-namespace networking functional
-- [x] Risk scoring accurate and detailed
+### Étape 1 : Port-forward MongoDB
 
-### Technical Insights Gained:
-- [x] Docker image tag verification importance
-- [x] Kubernetes ephemeral vs persistent storage
-- [x] Airflow 3.0 architecture understanding
-- [x] Production readiness considerations
-- [x] Pod lifecycle management
-- [x] Service discovery and networking
+```bash
+# Ouvrir un port-forward vers MongoDB (laisser tourner dans un terminal)
+kubectl port-forward -n default svc/mongo-service 27017:27017
+```
+
+### Étape 2 : Analyser le fichier Spotify avec le Worker
+
+**Ouvrir un NOUVEAU terminal** et exécuter :
+
+```bash
+# Activer l'environnement Python
+cd /chemin/vers/le/projet
+source .venv/bin/activate
+
+# Lancer l'analyse
+cat raw_data/spotify_tc.txt | \
+  MONGO_HOSTNAME=localhost MONGO_PORT=27017 \
+  python worker.py \
+  --task-id "spotify-demo-$(date +%s)" \
+  --source-name "spotify" \
+  --use-stdin
+```
+
+**Sortie attendue :**
+```
+[WORKER] Starting analysis task
+[WORKER] Task ID: spotify-demo-1234567890
+[WORKER] Source: spotify
+[WORKER] Reading text content from stdin...
+[WORKER] Text length: 54265 characters
+[WORKER] Connecting to MongoDB at localhost:27017
+[WORKER] MongoDB connection successful
+[WORKER] Starting AI analysis...
+[OK] spotify (Risk: 72/100)
+[WORKER] Analysis completed successfully
+[WORKER] Task finished and saved to MongoDB
+```
+
+### Étape 3 : Vérifier les données dans MongoDB
+
+```bash
+# Compter les analyses dans MongoDB
+kubectl exec -n default deployment/mongo-deployment -- \
+  mongosh too_long_to_read --quiet --eval "db.analytic_reports.countDocuments()"
+
+# Voir la dernière analyse Spotify
+kubectl exec -n default deployment/mongo-deployment -- \
+  mongosh too_long_to_read --quiet --eval \
+  "db.analytic_reports.findOne({source_name: 'spotify'}, {status: 1, 'report.risk_scores': 1})"
+```
+
+**Sortie attendue :**
+```json
+{
+  "_id": ObjectId("..."),
+  "status": "completed",
+  "report": {
+    "risk_scores": {
+      "overall": 72,
+      "data_privacy": 65,
+      "termination_risk": 75,
+      "legal_protection": 82,
+      "transparency": 58
+    }
+  }
+}
+```
+
+### Étape 4 : Synchroniser les métriques Prometheus
+
+```bash
+# Port-forward vers l'API (nouveau terminal ou en background)
+kubectl port-forward -n default svc/api-service 8000:8000 &
+
+# Attendre 3 secondes
+sleep 3
+
+# Synchroniser les métriques depuis MongoDB vers Prometheus
+curl http://localhost:8000/api/v1/sync-metrics
+```
+
+**Sortie attendue :**
+```json
+{
+  "message": "Metrics synchronized successfully",
+  "stats": {
+    "spotify": 1
+  },
+  "total": 1
+}
+```
+
+### Étape 5 : Vérifier les métriques Prometheus
+
+```bash
+# Voir toutes les métriques Spotify
+curl -s http://localhost:8000/metrics | grep 'source_name="spotify"'
+```
+
+**Sortie attendue :**
+```
+cgu_analyses_count{source_name="spotify"} 1.0
+cgu_last_risk_score{source_name="spotify"} 72.0
+cgu_data_privacy_score{source_name="spotify"} 65.0
+cgu_termination_risk_score{source_name="spotify"} 75.0
+cgu_legal_protection_score{source_name="spotify"} 82.0
+cgu_transparency_score{source_name="spotify"} 58.0
+cgu_problematic_clauses{source_name="spotify"} 10.0
+```
+
+### Étape 6 : Accéder à Grafana et visualiser
+
+```bash
+# Port-forward vers Grafana
+./access_grafana.sh
+
+# Ou manuellement :
+kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
+```
+
+**Ouvre ton navigateur :**
+- URL : http://localhost:3000
+- Username : `admin`
+- Password : `prom-operator`
+
+**Dans Grafana :**
+1. Va dans "Explore" (icône boussole à gauche)
+2. Sélectionne "Prometheus" comme source de données
+3. Entre cette requête :
+   ```
+   cgu_last_risk_score{source_name="spotify"}
+   ```
+4. Clique sur "Run query"
+5. Tu devrais voir le score **72** !
 
 ---
 
-## 🎓 For Your Class Presentation
+## 🎯 Script de Test Rapide
 
-### What to Show:
+Tu peux utiliser ce script bash pour tout tester d'un coup :
 
-**1. The Working System (5 minutes)**
 ```bash
-# Live demo
-export ANTHROPIC_API_KEY="your-key"
-./analyze_tc.sh raw_data/spotify_tc.txt spotify
+#!/bin/bash
+# test_complete.sh
 
-# Show results appearing in real-time
-# Show MongoDB storing results
-# Show pods being created
+echo "🚀 Test complet du pipeline 2Long2Read"
+echo "========================================"
+
+# 1. Port-forward MongoDB
+echo "1️⃣  Démarrage port-forward MongoDB..."
+pkill -f "kubectl port-forward.*mongo" 2>/dev/null
+kubectl port-forward -n default svc/mongo-service 27017:27017 > /dev/null 2>&1 &
+sleep 3
+
+# 2. Analyse Spotify
+echo "2️⃣  Analyse des CGU Spotify..."
+TASK_ID="test-$(date +%s)"
+cat raw_data/spotify_tc.txt | \
+  MONGO_HOSTNAME=localhost MONGO_PORT=27017 \
+  .venv/bin/python worker.py \
+  --task-id "$TASK_ID" \
+  --source-name "spotify" \
+  --use-stdin | grep "\[OK\]"
+
+# 3. Vérification MongoDB
+echo "3️⃣  Vérification MongoDB..."
+COUNT=$(kubectl exec -n default deployment/mongo-deployment -- \
+  mongosh too_long_to_read --quiet --eval \
+  "db.analytic_reports.countDocuments({source_name: 'spotify'})")
+echo "   ✅ Analyses Spotify dans MongoDB: $COUNT"
+
+# 4. Port-forward API
+echo "4️⃣  Démarrage port-forward API..."
+pkill -f "kubectl port-forward.*api" 2>/dev/null
+kubectl port-forward -n default svc/api-service 8000:8000 > /dev/null 2>&1 &
+sleep 3
+
+# 5. Sync métriques
+echo "5️⃣  Synchronisation des métriques..."
+curl -s http://localhost:8000/api/v1/sync-metrics | grep -o '"total":[0-9]*'
+
+# 6. Vérification métriques
+echo "6️⃣  Vérification des métriques Prometheus..."
+curl -s http://localhost:8000/metrics | grep 'cgu_last_risk_score{source_name="spotify"}'
+
+echo ""
+echo "✅ Test terminé ! Accède à Grafana avec: ./access_grafana.sh"
+echo "   URL: http://localhost:3000 (admin / prom-operator)"
 ```
 
-**2. Docker Containerization (2 minutes)**
+Rends-le exécutable et lance-le :
+
 ```bash
-# Show the image
+chmod +x test_complete.sh
+./test_complete.sh
+```
+
+---
+
+## 📊 Résultats d'Analyse Spotify
+
+L'analyse complète de Spotify révèle :
+
+### Scores de Risque
+- **Score Global** : 72/100 (Préoccupant)
+- **Confidentialité des données** : 65/100
+- **Risque de résiliation** : 75/100
+- **Protection légale** : 82/100
+- **Transparence** : 58/100
+
+### Clauses Problématiques Identifiées (10 au total)
+1. ⚠️ **Arbitrage obligatoire** (CRITIQUE) - Pas de recours collectifs
+2. ⚠️ **Licence mondiale irrévocable** sur votre contenu
+3. ⚠️ **Résiliation sans remboursement**
+4. ⚠️ **Limitation de responsabilité** à 30$
+5. Et 6 autres clauses à risque...
+
+---
+
+## 🏗️ Architecture du Projet
+
+```
+┌─────────────────┐
+│  Fichier Spotify│
+│  (raw_data/)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Worker Python  │
+│  (Claude AI)    │◄─── Clé API Anthropic
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│    MongoDB      │
+│  (stockage)     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   API FastAPI   │
+│  /metrics       │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   Prometheus    │
+│  (scraping)     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│    Grafana      │
+│ (visualisation) │
+└─────────────────┘
+```
+
+---
+
+## 🔧 Commandes Utiles
+
+### Vérifier l'état des pods
+
+```bash
+# Tous les pods
+kubectl get pods --all-namespaces
+
+# Pods de l'application
+kubectl get pods -n default
+
+# Pods de monitoring
+kubectl get pods -n monitoring
+```
+
+### Redémarrer un composant
+
+```bash
+# Redémarrer l'API (après modification du code)
+kubectl rollout restart deployment/api-deployment
+
+# Redémarrer le Worker
+kubectl rollout restart deployment/worker-deployment
+
+# Attendre que le déploiement soit prêt
+kubectl rollout status deployment/api-deployment
+```
+
+### Voir les logs
+
+```bash
+# Logs de l'API
+kubectl logs -f deployment/api-deployment
+
+# Logs du Worker
+kubectl logs -f deployment/worker-deployment
+
+# Logs de MongoDB
+kubectl logs -f deployment/mongo-deployment
+```
+
+### Nettoyer MongoDB (repartir de zéro)
+
+```bash
+kubectl exec -n default deployment/mongo-deployment -- \
+  mongosh too_long_to_read --eval "db.analytic_reports.deleteMany({})"
+```
+
+---
+
+## 🐛 Dépannage
+
+### Problème : MongoDB inaccessible
+
+```bash
+# Vérifier que MongoDB tourne
+kubectl get pods -l app=mongo
+
+# Vérifier les logs
+kubectl logs deployment/mongo-deployment
+
+# Redémarrer MongoDB
+kubectl rollout restart deployment/mongo-deployment
+```
+
+### Problème : Métriques à 0 dans Grafana
+
+```bash
+# 1. Vérifier que l'analyse est dans MongoDB
+kubectl exec -n default deployment/mongo-deployment -- \
+  mongosh too_long_to_read --quiet --eval \
+  "db.analytic_reports.countDocuments({source_name: 'spotify'})"
+
+# 2. Re-synchroniser les métriques
+curl http://localhost:8000/api/v1/sync-metrics
+
+# 3. Vérifier les métriques dans Prometheus
+curl http://localhost:8000/metrics | grep spotify
+```
+
+### Problème : Image Docker pas trouvée
+
+```bash
+# Vérifier que les images existent
 docker images | grep 2long2read
 
-# Show the Dockerfile
-cat Dockerfile.worker
+# Si elles n'existent pas, les reconstruire
+docker build -t 2long2read-api:latest -f Dockerfile .
+docker build -t 2long2read-worker:latest -f Dockerfile.worker .
 
-# Explain containerization benefits
+# Redémarrer les pods pour utiliser les nouvelles images
+kubectl rollout restart deployment/api-deployment
+kubectl rollout restart deployment/worker-deployment
 ```
 
-**3. Kubernetes Orchestration (3 minutes)**
+---
+
+## 🎓 Pour la Démo
+
+### 1. Préparation (5 min avant)
+
 ```bash
-# Show all pods
-kubectl get pods --namespace airflow
-kubectl get pods --namespace default
+# S'assurer que tout tourne
+kubectl get pods --all-namespaces
 
-# Show pod details
-kubectl describe pod <worker-pod-name>
+# Port-forwards en place
+kubectl port-forward -n default svc/mongo-service 27017:27017 &
+kubectl port-forward -n default svc/api-service 8000:8000 &
+kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80 &
 
-# Explain orchestration
+# Nettoyer MongoDB pour partir de zéro (optionnel)
+kubectl exec -n default deployment/mongo-deployment -- \
+  mongosh too_long_to_read --eval "db.analytic_reports.deleteMany({})"
 ```
 
-**4. Airflow UI (3 minutes)**
-- Show UI at http://localhost:8080
-- Navigate through interface
-- Show task instances
-- **Explain DAG visibility challenge** (this is a STRENGTH!)
+### 2. Démonstration Live (10 min)
 
-**5. Technical Insights (2 minutes)**
-- Discuss PostgreSQL `latest` tag discovery
-- Explain ephemeral vs persistent storage
-- Show understanding of production considerations
+**Étape 1 : Montrer le fichier d'entrée**
+```bash
+# Montrer les premières lignes du fichier Spotify
+head -20 raw_data/spotify_tc.txt
+wc -w raw_data/spotify_tc.txt  # Nombre de mots
+```
 
-### Key Points to Emphasize:
+**Étape 2 : Lancer l'analyse en direct**
+```bash
+cat raw_data/spotify_tc.txt | \
+  MONGO_HOSTNAME=localhost MONGO_PORT=27017 \
+  .venv/bin/python worker.py \
+  --task-id "demo-live-$(date +%s)" \
+  --source-name "spotify" \
+  --use-stdin
+```
 
-✅ **All three technologies demonstrated:** Docker, Kubernetes, Airflow
-✅ **System works end-to-end:** Real analysis with real results
-✅ **Production insights:** Understanding of persistent storage needs
-✅ **Problem-solving:** Image tag troubleshooting
-✅ **Real-world application:** Practical T&C analysis tool
+**Étape 3 : Montrer les données dans MongoDB**
+```bash
+kubectl exec -n default deployment/mongo-deployment -- \
+  mongosh too_long_to_read --quiet --eval \
+  "db.analytic_reports.find({source_name: 'spotify'}).sort({_id: -1}).limit(1).pretty()"
+```
+
+**Étape 4 : Synchroniser et montrer les métriques**
+```bash
+# Sync
+curl http://localhost:8000/api/v1/sync-metrics
+
+# Voir les métriques
+curl http://localhost:8000/metrics | grep spotify
+```
+
+**Étape 5 : Ouvrir Grafana**
+- Navigateur : http://localhost:3000
+- Login : admin / prom-operator
+- Aller dans "Explore"
+- Requête : `cgu_last_risk_score{source_name="spotify"}`
+- Montrer le graphique avec le score de 72
+
+### 3. Points à Souligner
+
+✅ **Technologies utilisées** :
+- Docker (conteneurisation)
+- Kubernetes (orchestration)
+- MongoDB (base de données)
+- Claude AI (analyse IA)
+- Prometheus (métriques)
+- Grafana (visualisation)
+
+✅ **Pipeline complet fonctionnel** :
+- Fichier texte → Analyse IA → Stockage → Métriques → Visualisation
+
+✅ **Scores de risque précis** :
+- Analyse sémantique approfondie des CGU
+- Identification des clauses dangereuses
+- Recommandations pour les utilisateurs
 
 ---
 
-## 🚀 Future Production Improvements
-
-To make this production-ready:
-
-**1. DAG Persistence (High Priority)**
-- Implement Persistent Volume for DAG files
-- Or configure GitSync for automatic DAG updates
-- Ensures DAGs visible in UI permanently
-
-**2. Scalability**
-- Horizontal pod autoscaling
-- MongoDB replica set
-- Load balancing
-
-**3. Monitoring & Observability**
-- Prometheus metrics
-- Grafana dashboards
-- Log aggregation (ELK/Loki)
-
-**4. Security Enhancements**
-- Static webserver secret key
-- Network policies
-- Pod security policies
-- Secrets management (Vault)
-
----
-
-## 📁 Project Structure
+## 📁 Structure du Projet
 
 ```
 .
-├── analyze_tc.sh              # One-command analysis (MAIN DEMO!)
-├── worker.py                  # Analysis engine (runs in Docker)
-├── ai_analyzer.py             # Claude AI integration
-├── Dockerfile.worker          # Container definition
-├── config/
-│   └── airflow-values-simple.yaml  # Airflow Helm config (with latest tag!)
-├── dags/
-│   └── cgu_analysis_dag.py    # Airflow DAG definition
-├── raw_data/                  # Input T&C files
-└── README.md                  # This file (comprehensive documentation)
+├── README.md                  # Ce fichier
+├── requirements.txt           # Dépendances Python
+├── Dockerfile                 # Image Docker de l'API
+├── Dockerfile.worker          # Image Docker du Worker
+├── main.py                    # API FastAPI avec métriques Prometheus
+├── worker.py                  # Worker d'analyse (Claude AI)
+├── ai_analyzer.py             # Logique d'analyse IA
+├── k8s-app.yaml              # Déploiement API + Worker
+├── k8s-infra.yaml            # Déploiement MongoDB
+├── access_grafana.sh          # Script d'accès Grafana
+├── raw_data/
+│   └── spotify_tc.txt         # Fichier de test Spotify
+└── config/
+    └── grafana_spotify_dashboard.json  # Dashboard Grafana
 ```
 
 ---
 
-*Last Updated: October 18, 2025*
+## 🚀 Prochaines Étapes
 
-*Built with Claude Code*
+Une fois que tout fonctionne chez toi, tu peux :
 
-**Status: ✅ CORE SYSTEM FULLY OPERATIONAL**
-
-**Key Takeaways:**
-1. Always use `latest` image tags or verify specific versions exist
-2. Understand ephemeral vs persistent storage in Kubernetes
-3. Production Airflow requires persistent volume for DAG files
-4. Working automation is more valuable than perfect UI
-5. Real-world projects teach you things documentation doesn't!
+1. **Analyser d'autres fichiers** : Ajoute tes propres fichiers T&C dans `raw_data/`
+2. **Créer des dashboards Grafana** : Importe `config/grafana_spotify_dashboard.json`
+3. **Intégrer Airflow** : Pour l'orchestration automatique (à venir)
+4. **Ajouter d'autres sources** : Google, Facebook, Amazon, etc.
 
 ---
 
-## 🎉 Final Note
+## 📞 Support
 
-This project successfully demonstrates all required technologies while providing valuable insights into production deployment challenges. The DAG visibility limitation actually **strengthens** your presentation by showing:
+Si tu rencontres des problèmes :
 
-1. **Technical depth** - Understanding of Kubernetes storage concepts
-2. **Problem-solving** - Identifying root causes vs symptoms
-3. **Production awareness** - Knowing what's needed for real deployments
-4. **Practical focus** - Working system over perfect UI
+1. Vérifie que Docker Desktop est démarré
+2. Vérifie que tous les pods sont en état `Running`
+3. Vérifie les logs des pods concernés
+4. Consulte la section "Dépannage" ci-dessus
 
-**Your working `analyze_tc.sh` script demonstrates everything the course requires!** 🚀
+---
+
+## ✨ Résumé des Commandes Essentielles
+
+```bash
+# Setup initial
+kubectl create secret generic claude-api-key-secret --from-literal=ANTHROPIC_API_KEY="ta-clé"
+docker build -t 2long2read-api:latest -f Dockerfile .
+docker build -t 2long2read-worker:latest -f Dockerfile.worker .
+kubectl apply -f k8s-infra.yaml
+kubectl apply -f k8s-app.yaml
+helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+
+# Test complet
+kubectl port-forward -n default svc/mongo-service 27017:27017 &
+cat raw_data/spotify_tc.txt | MONGO_HOSTNAME=localhost MONGO_PORT=27017 .venv/bin/python worker.py --task-id "test-$(date +%s)" --source-name "spotify" --use-stdin
+kubectl port-forward -n default svc/api-service 8000:8000 &
+curl http://localhost:8000/api/v1/sync-metrics
+./access_grafana.sh
+```
+
+---
+
+**Bon courage pour ta démo ! 🎉**

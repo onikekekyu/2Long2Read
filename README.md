@@ -124,9 +124,84 @@ monitoring-prometheus-node-exporter-xxx                  1/1     Running   0    
 prometheus-monitoring-kube-prometheus-prometheus-0       2/2     Running   0          2m
 ```
 
+### 7. Installer Airflow (Orchestration)
+
+**⚠️ IMPORTANT : Airflow 2.10.3 avec Persistent Volume**
+
+Airflow 3.0 a un bug avec les ConfigMaps Kubernetes (symlinks récursifs). Nous utilisons donc Airflow 2.10.3 avec un Persistent Volume pointant vers le dossier local `dags/`.
+
+```bash
+# Ajouter le repo Helm d'Airflow
+helm repo add apache-airflow https://airflow.apache.org
+helm repo update
+
+# Créer le namespace Airflow
+kubectl create namespace airflow
+
+# Créer le Persistent Volume pour les DAGs
+kubectl apply -f k8s-airflow-dags-pv.yaml
+
+# Vérifier que le PV est créé
+kubectl get pv airflow-dags-pv
+kubectl get pvc airflow-dags-pvc -n airflow
+```
+
+**Sortie attendue :**
+```
+NAME              CAPACITY   ACCESS MODES   STATUS   CLAIM
+airflow-dags-pv   1Gi        RWX            Bound    airflow/airflow-dags-pvc
+```
+
+**Installer Airflow avec le fichier de configuration :**
+
+```bash
+# Installer Airflow 2.10.3 avec PV pour les DAGs
+helm install airflow apache-airflow/airflow \
+  --namespace airflow \
+  -f airflow-values.yaml \
+  --timeout 10m \
+  --wait
+
+# Attendre que tous les pods soient prêts (environ 3-5 minutes)
+kubectl get pods -n airflow -w
+```
+
+**Sortie attendue (après 3-5 min) :**
+```
+NAME                                 READY   STATUS    RESTARTS   AGE
+airflow-postgresql-0                 1/1     Running   0          3m
+airflow-scheduler-xxx                3/3     Running   0          2m
+airflow-triggerer-xxx                1/1     Running   0          2m
+airflow-webserver-xxx                1/1     Running   0          2m
+```
+
+**Accéder à l'interface Airflow :**
+
+```bash
+# Port-forward vers Airflow UI
+kubectl port-forward -n airflow svc/airflow-webserver 8080:8080 &
+
+# Ouvrir dans le navigateur : http://localhost:8080
+# Username: admin
+# Password: admin
+```
+
+**Vérifier que le DAG est chargé :**
+1. Ouvre http://localhost:8080
+2. Login avec `admin` / `admin`
+3. Tu devrais voir le DAG `cgu_analysis_pipeline` avec 4 tasks :
+   - ✅ check_environment
+   - ✅ run_cgu_analysis
+   - ✅ sync_metrics
+   - ✅ final_report
+
 ---
 
 ## 🧪 Tester le Pipeline Complet
+
+### Test Complet du Workflow End-to-End
+
+**Objectif** : Analyser les CGU Spotify avec Claude AI, stocker dans MongoDB, synchroniser les métriques Prometheus, visualiser dans Grafana et orchestrer avec Airflow.
 
 ### Étape 1 : Port-forward MongoDB
 
@@ -244,26 +319,91 @@ cgu_problematic_clauses{source_name="spotify"} 10.0
 
 ```bash
 # Port-forward vers Grafana
-./access_grafana.sh
+kubectl port-forward -n monitoring svc/grafana 3000:80 &
 
-# Ou manuellement :
-kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
+# Ou utilise le script :
+./access_grafana.sh
 ```
 
 **Ouvre ton navigateur :**
 - URL : http://localhost:3000
 - Username : `admin`
-- Password : `prom-operator`
+- Password : `admin`
 
 **Dans Grafana :**
 1. Va dans "Explore" (icône boussole à gauche)
 2. Sélectionne "Prometheus" comme source de données
 3. Entre cette requête :
    ```
-   cgu_last_risk_score{source_name="spotify"}
+   cgu_last_risk_score{source_name="Spotify"}
    ```
 4. Clique sur "Run query"
 5. Tu devrais voir le score **72** !
+
+**Sortie attendue dans Grafana :**
+```
+cgu_last_risk_score{source_name="Spotify"} = 72
+cgu_data_privacy_score{source_name="Spotify"} = 65
+cgu_termination_risk_score{source_name="Spotify"} = 75
+cgu_problematic_clauses{source_name="Spotify"} = 10
+```
+
+### Étape 7 : Tester l'orchestration Airflow
+
+**Port-forward vers Airflow UI :**
+
+```bash
+# Port-forward vers Airflow
+kubectl port-forward -n airflow svc/airflow-webserver 8080:8080 &
+```
+
+**Ouvre ton navigateur :**
+- URL : http://localhost:8080
+- Username : `admin`
+- Password : `admin`
+
+**Tester le DAG :**
+
+1. Clique sur le DAG `cgu_analysis_pipeline` dans la liste
+2. Clique sur le bouton "Trigger DAG" (icône play ▶️ en haut à droite)
+3. Confirme en cliquant sur "Trigger"
+4. Attends quelques secondes et rafraîchis la page
+
+**Sortie attendue :**
+- Les 4 tasks doivent être en vert (SUCCESS) :
+  - ✅ check_environment
+  - ✅ run_cgu_analysis
+  - ✅ sync_metrics
+  - ✅ final_report
+
+**Voir les logs d'une task :**
+1. Clique sur une task (ex: `run_cgu_analysis`)
+2. Clique sur "Log"
+3. Tu verras les détails de l'exécution avec les scores affichés
+
+**Logs attendus pour `run_cgu_analysis` :**
+```
+===========================================
+🤖 ANALYSE DES CGU EN COURS
+===========================================
+
+📄 Source : Spotify Terms & Conditions
+📏 Longueur : ~54,000 caractères
+
+🔄 Analyse avec Claude AI...
+
+✅ Analyse terminée !
+
+📊 RÉSULTATS :
+   • Score global : 72/100 (Préoccupant)
+   • Data Privacy : 65/100
+   • Termination Risk : 75/100
+   • Legal Protection : 82/100
+   • Transparency : 58/100
+   • Clauses dangereuses : 10
+
+💾 Données sauvegardées dans MongoDB
+```
 
 ---
 

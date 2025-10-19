@@ -68,13 +68,13 @@ airflowHome: /opt/airflow
 defaultAirflowRepository: apache/airflow
 
 # Default airflow tag to deploy
-defaultAirflowTag: "3.0.2"
+defaultAirflowTag: "2.10.3"
 
 # Default airflow digest. If specified, it takes precedence over tag
 defaultAirflowDigest: ~
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-airflowVersion: "3.0.2"
+airflowVersion: "2.10.3"
 
 # Images
 images:
@@ -1368,8 +1368,8 @@ migrateDatabaseJob:
 
 apiServer:
 
-  # Number of Airflow API servers in the deployment
-  replicas: 1
+  # Number of Airflow API servers in the deployment (disabled in Airflow 2.x)
+  replicas: 0
   # Max number of old replicasets to retain
   revisionHistoryLimit: ~
 
@@ -1987,9 +1987,9 @@ triggerer:
     # This configuration will be ignored if PGBouncer is not enabled
     usePgbouncer: false
 
-# Airflow Dag Processor Config
+# Airflow Dag Processor Config (disabled in Airflow 2.x - integrated in scheduler)
 dagProcessor:
-  enabled: ~
+  enabled: false
   # Number of airflow dag processors in the deployment
   replicas: 1
   # Max number of old replicasets to retain
@@ -2948,15 +2948,15 @@ dags:
     # Annotations for dags PVC
     annotations: {}
     # Enable persistent volume for storing dags
-    enabled: false
+    enabled: true
     # Volume size for dags
     size: 1Gi
     # If using a custom storageClass, pass name here
-    storageClassName:
+    storageClassName: hostpath
     # access mode of the persistent volume
-    accessMode: ReadWriteOnce
+    accessMode: ReadWriteMany
     ## the name of an existing PVC to use
-    existingClaim:
+    existingClaim: airflow-dags-pvc
     ## optional subpath for dag volume mount
     subPath: ~
   gitSync:

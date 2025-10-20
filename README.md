@@ -1,10 +1,10 @@
-# 🚀 2Long2Read - Analyseur de CGU avec Claude AI
+# 2Long2Read - Analyseur de CGU avec Claude AI
 
 **Système d'analyse automatique de Terms & Conditions utilisant Claude AI, MongoDB, Prometheus et Grafana sur Kubernetes.**
 
 ---
 
-## 📋 Prérequis
+## Prérequis
 
 Avant de commencer, assure-toi d'avoir :
 
@@ -25,7 +25,7 @@ python3 --version
 
 ---
 
-## 🛠️ Installation Complète (Étape par Étape)
+## Installation Complète (Étape par Étape)
 
 ### 1. Cloner le projet
 
@@ -126,7 +126,7 @@ prometheus-monitoring-kube-prometheus-prometheus-0       2/2     Running   0    
 
 ### 7. Installer Airflow (Orchestration)
 
-**⚠️ IMPORTANT : Airflow 2.10.3 avec Persistent Volume**
+** IMPORTANT : Airflow 2.10.3 avec Persistent Volume**
 
 Airflow 3.0 a un bug avec les ConfigMaps Kubernetes (symlinks récursifs). Nous utilisons donc Airflow 2.10.3 avec un Persistent Volume pointant vers le dossier local `dags/`.
 
@@ -190,14 +190,14 @@ kubectl port-forward -n airflow svc/airflow-webserver 8080:8080 &
 1. Ouvre http://localhost:8080
 2. Login avec `admin` / `admin`
 3. Tu devrais voir le DAG `cgu_analysis_pipeline` avec 4 tasks :
-   - ✅ check_environment
-   - ✅ run_cgu_analysis
-   - ✅ sync_metrics
-   - ✅ final_report
+  - check_environment
+  - run_cgu_analysis
+  - sync_metrics
+  - final_report
 
 ---
 
-## 🧪 Tester le Pipeline Complet
+##  Tester le Pipeline Complet
 
 ### Test Complet du Workflow End-to-End
 
@@ -365,16 +365,16 @@ kubectl port-forward -n airflow svc/airflow-webserver 8080:8080 &
 **Tester le DAG :**
 
 1. Clique sur le DAG `cgu_analysis_pipeline` dans la liste
-2. Clique sur le bouton "Trigger DAG" (icône play ▶️ en haut à droite)
+2. Clique sur le bouton "Trigger DAG" (icône play en haut à droite)
 3. Confirme en cliquant sur "Trigger"
 4. Attends quelques secondes et rafraîchis la page
 
 **Sortie attendue :**
 - Les 4 tasks doivent être en vert (SUCCESS) :
-  - ✅ check_environment
-  - ✅ run_cgu_analysis
-  - ✅ sync_metrics
-  - ✅ final_report
+  -  check_environment
+  -  run_cgu_analysis
+  -  sync_metrics
+  -  final_report
 
 **Voir les logs d'une task :**
 1. Clique sur une task (ex: `run_cgu_analysis`)
@@ -384,17 +384,17 @@ kubectl port-forward -n airflow svc/airflow-webserver 8080:8080 &
 **Logs attendus pour `run_cgu_analysis` :**
 ```
 ===========================================
-🤖 ANALYSE DES CGU EN COURS
+ ANALYSE DES CGU EN COURS
 ===========================================
 
-📄 Source : Spotify Terms & Conditions
-📏 Longueur : ~54,000 caractères
+ Source : Spotify Terms & Conditions
+ Longueur : ~54,000 caractères
 
-🔄 Analyse avec Claude AI...
+ Analyse avec Claude AI...
 
-✅ Analyse terminée !
+ Analyse terminée !
 
-📊 RÉSULTATS :
+ RÉSULTATS :
    • Score global : 72/100 (Préoccupant)
    • Data Privacy : 65/100
    • Termination Risk : 75/100
@@ -402,12 +402,12 @@ kubectl port-forward -n airflow svc/airflow-webserver 8080:8080 &
    • Transparency : 58/100
    • Clauses dangereuses : 10
 
-💾 Données sauvegardées dans MongoDB
+ Données sauvegardées dans MongoDB
 ```
 
 ---
 
-## 🎯 Script de Test Rapide
+##  Script de Test Rapide
 
 Tu peux utiliser ce script bash pour tout tester d'un coup :
 
@@ -415,17 +415,17 @@ Tu peux utiliser ce script bash pour tout tester d'un coup :
 #!/bin/bash
 # test_complete.sh
 
-echo "🚀 Test complet du pipeline 2Long2Read"
+echo " Test complet du pipeline 2Long2Read"
 echo "========================================"
 
 # 1. Port-forward MongoDB
-echo "1️⃣  Démarrage port-forward MongoDB..."
+echo "1️  Démarrage port-forward MongoDB..."
 pkill -f "kubectl port-forward.*mongo" 2>/dev/null
 kubectl port-forward -n default svc/mongo-service 27017:27017 > /dev/null 2>&1 &
 sleep 3
 
 # 2. Analyse Spotify
-echo "2️⃣  Analyse des CGU Spotify..."
+echo "2️  Analyse des CGU Spotify..."
 TASK_ID="test-$(date +%s)"
 cat raw_data/spotify_tc.txt | \
   MONGO_HOSTNAME=localhost MONGO_PORT=27017 \
@@ -435,28 +435,28 @@ cat raw_data/spotify_tc.txt | \
   --use-stdin | grep "\[OK\]"
 
 # 3. Vérification MongoDB
-echo "3️⃣  Vérification MongoDB..."
+echo "3️  Vérification MongoDB..."
 COUNT=$(kubectl exec -n default deployment/mongo-deployment -- \
   mongosh too_long_to_read --quiet --eval \
   "db.analytic_reports.countDocuments({source_name: 'spotify'})")
-echo "   ✅ Analyses Spotify dans MongoDB: $COUNT"
+echo "    Analyses Spotify dans MongoDB: $COUNT"
 
 # 4. Port-forward API
-echo "4️⃣  Démarrage port-forward API..."
+echo "4️  Démarrage port-forward API..."
 pkill -f "kubectl port-forward.*api" 2>/dev/null
 kubectl port-forward -n default svc/api-service 8000:8000 > /dev/null 2>&1 &
 sleep 3
 
 # 5. Sync métriques
-echo "5️⃣  Synchronisation des métriques..."
+echo "5️  Synchronisation des métriques..."
 curl -s http://localhost:8000/api/v1/sync-metrics | grep -o '"total":[0-9]*'
 
 # 6. Vérification métriques
-echo "6️⃣  Vérification des métriques Prometheus..."
+echo "6️  Vérification des métriques Prometheus..."
 curl -s http://localhost:8000/metrics | grep 'cgu_last_risk_score{source_name="spotify"}'
 
 echo ""
-echo "✅ Test terminé ! Accède à Grafana avec: ./access_grafana.sh"
+echo " Test terminé ! Accède à Grafana avec: ./access_grafana.sh"
 echo "   URL: http://localhost:3000 (admin / prom-operator)"
 ```
 
@@ -469,7 +469,7 @@ chmod +x test_complete.sh
 
 ---
 
-## 📊 Résultats d'Analyse Spotify
+##  Résultats d'Analyse Spotify
 
 L'analyse complète de Spotify révèle :
 
@@ -481,15 +481,15 @@ L'analyse complète de Spotify révèle :
 - **Transparence** : 58/100
 
 ### Clauses Problématiques Identifiées (10 au total)
-1. ⚠️ **Arbitrage obligatoire** (CRITIQUE) - Pas de recours collectifs
-2. ⚠️ **Licence mondiale irrévocable** sur votre contenu
-3. ⚠️ **Résiliation sans remboursement**
-4. ⚠️ **Limitation de responsabilité** à 30$
+1.  **Arbitrage obligatoire** (CRITIQUE) - Pas de recours collectifs
+2.  **Licence mondiale irrévocable** sur votre contenu
+3.  **Résiliation sans remboursement**
+4.  **Limitation de responsabilité** à 30$
 5. Et 6 autres clauses à risque...
 
 ---
 
-## 🏗️ Architecture du Projet
+##  Architecture du Projet
 
 ```
 ┌─────────────────┐
@@ -500,7 +500,7 @@ L'analyse complète de Spotify révèle :
          ▼
 ┌─────────────────┐
 │  Worker Python  │
-│  (Claude AI)    │◄─── Clé API Anthropic
+│  (Claude AI)    │ Clé API Anthropic
 └────────┬────────┘
          │
          ▼
@@ -530,7 +530,7 @@ L'analyse complète de Spotify révèle :
 
 ---
 
-## 🔧 Commandes Utiles
+## Commandes Utiles
 
 ### Vérifier l'état des pods
 
@@ -627,109 +627,7 @@ kubectl rollout restart deployment/worker-deployment
 
 ---
 
-## 🎓 Pour la Démo
-
-### 1. Préparation (5 min avant)
-
-```bash
-# S'assurer que tout tourne
-kubectl get pods --all-namespaces
-
-# Port-forwards en place
-kubectl port-forward -n default svc/mongo-service 27017:27017 &
-kubectl port-forward -n default svc/api-service 8000:8000 &
-kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80 &
-
-# Nettoyer MongoDB pour partir de zéro (optionnel)
-kubectl exec -n default deployment/mongo-deployment -- \
-  mongosh too_long_to_read --eval "db.analytic_reports.deleteMany({})"
-```
-
-### 2. Démonstration Live (10 min)
-
-**Étape 1 : Montrer le fichier d'entrée**
-```bash
-# Montrer les premières lignes du fichier Spotify
-head -20 raw_data/spotify_tc.txt
-wc -w raw_data/spotify_tc.txt  # Nombre de mots
-```
-
-**Étape 2 : Lancer l'analyse en direct**
-```bash
-cat raw_data/spotify_tc.txt | \
-  MONGO_HOSTNAME=localhost MONGO_PORT=27017 \
-  .venv/bin/python worker.py \
-  --task-id "demo-live-$(date +%s)" \
-  --source-name "spotify" \
-  --use-stdin
-```
-
-**Étape 3 : Montrer les données dans MongoDB**
-```bash
-kubectl exec -n default deployment/mongo-deployment -- \
-  mongosh too_long_to_read --quiet --eval \
-  "db.analytic_reports.find({source_name: 'spotify'}).sort({_id: -1}).limit(1).pretty()"
-```
-
-**Étape 4 : Synchroniser et montrer les métriques**
-```bash
-# Sync
-curl http://localhost:8000/api/v1/sync-metrics
-
-# Voir les métriques
-curl http://localhost:8000/metrics | grep spotify
-```
-
-**Étape 5 : Ouvrir Grafana**
-- Navigateur : http://localhost:3000
-- Login : admin / prom-operator
-- Aller dans "Explore"
-- Requête : `cgu_last_risk_score{source_name="spotify"}`
-- Montrer le graphique avec le score de 72
-
-### 3. Points à Souligner
-
-✅ **Technologies utilisées** :
-- Docker (conteneurisation)
-- Kubernetes (orchestration)
-- MongoDB (base de données)
-- Claude AI (analyse IA)
-- Prometheus (métriques)
-- Grafana (visualisation)
-
-✅ **Pipeline complet fonctionnel** :
-- Fichier texte → Analyse IA → Stockage → Métriques → Visualisation
-
-✅ **Scores de risque précis** :
-- Analyse sémantique approfondie des CGU
-- Identification des clauses dangereuses
-- Recommandations pour les utilisateurs
-
----
-
-## 📁 Structure du Projet
-
-```
-.
-├── README.md                  # Ce fichier
-├── requirements.txt           # Dépendances Python
-├── Dockerfile                 # Image Docker de l'API
-├── Dockerfile.worker          # Image Docker du Worker
-├── main.py                    # API FastAPI avec métriques Prometheus
-├── worker.py                  # Worker d'analyse (Claude AI)
-├── ai_analyzer.py             # Logique d'analyse IA
-├── k8s-app.yaml              # Déploiement API + Worker
-├── k8s-infra.yaml            # Déploiement MongoDB
-├── access_grafana.sh          # Script d'accès Grafana
-├── raw_data/
-│   └── spotify_tc.txt         # Fichier de test Spotify
-└── config/
-    └── grafana_spotify_dashboard.json  # Dashboard Grafana
-```
-
----
-
-## 🚀 Prochaines Étapes
+## Prochaines Étapes
 
 Une fois que tout fonctionne chez toi, tu peux :
 
@@ -740,7 +638,7 @@ Une fois que tout fonctionne chez toi, tu peux :
 
 ---
 
-## 📞 Support
+##  Support
 
 Si tu rencontres des problèmes :
 
@@ -751,7 +649,7 @@ Si tu rencontres des problèmes :
 
 ---
 
-## ✨ Résumé des Commandes Essentielles
+## Résumé des Commandes Essentielles
 
 ```bash
 # Setup initial
@@ -769,7 +667,3 @@ kubectl port-forward -n default svc/api-service 8000:8000 &
 curl http://localhost:8000/api/v1/sync-metrics
 ./access_grafana.sh
 ```
-
----
-
-**Bon courage pour ta démo ! 🎉**

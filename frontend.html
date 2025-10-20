@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2Long2Read - Cute T&C Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Soft Pastel Colors */
+            --pastel-lavender: #E6E6FA;
+            --pastel-pink: #FFB6D9;
+            --pastel-peach: #FFD4B2;
+            --pastel-mint: #B4E7CE;
+            --pastel-sky: #C4E7FF;
+            --pastel-lilac: #D4C4FB;
+            --pastel-coral: #FFB3BA;
+            --pastel-lemon: #FFF5BA;
+
+            /* Soft Backgrounds */
+            --bg-main: #FFF9F9;
+            --bg-card: #FFFFFF;
+            --text-dark: #5A4A6A;
+            --text-light: #8B7B9B;
+            --text-muted: #B8AABE;
+
+            /* Accent colors */
+            --accent-success: #A8E6CF;
+            --accent-warning: #FFD3B6;
+            --accent-danger: #FFB3B3;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, var(--pastel-lavender) 0%, var(--pastel-sky) 100%);
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .fullscreen-container {
+            height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            padding: 15px;
+            gap: 15px;
+            overflow: hidden;
+        }
+
+        /* Cute Cat */
+        .cat-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .cat-img {
+            width: 150px;
+            height: auto;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 8px 20px rgba(90, 74, 106, 0.2));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 4px 20px rgba(90, 74, 106, 0.1);
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2em;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-lilac));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.95em;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr 300px;
+            gap: 15px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Left Panel - Summary */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(90, 74, 106, 0.08);
+        }
+
+        .company-name {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .verdict-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+            background: linear-gradient(135deg, var(--pastel-coral), var(--pastel-peach));
+            color: #8B4A4A;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, var(--pastel-lilac), var(--pastel-sky));
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(90, 74, 106, 0.1);
+        }
+
+        .score-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-lilac));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .score-label {
+            font-size: 0.85em;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .mini-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .mini-score {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .mini-score-value {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .mini-score-label {
+            font-size: 0.75em;
+            color: var(--text-light);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 0.75em;
+            color: var(--text-light);
+        }
+
+        /* Center Panel - Main Content */
+        .center-panel {
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 18px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(90, 74, 106, 0.06);
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(230, 230, 250, 0.3), rgba(196, 231, 255, 0.3));
+            transition: background 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, rgba(230, 230, 250, 0.5), rgba(196, 231, 255, 0.5));
+        }
+
+        .section-title {
+            font-size: 1.05em;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-count {
+            background: var(--pastel-lilac);
+            color: var(--text-dark);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .section.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .section.active .section-content {
+            max-height: 2000px;
+        }
+
+        .section-inner {
+            padding: 20px;
+        }
+
+        /* Issue Cards */
+        .issue-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid;
+            font-size: 0.9em;
+        }
+
+        .issue-critical {
+            border-color: var(--accent-danger);
+            background: linear-gradient(135deg, rgba(255, 179, 179, 0.08), white);
+        }
+
+        .issue-high {
+            border-color: var(--accent-warning);
+            background: linear-gradient(135deg, rgba(255, 211, 182, 0.08), white);
+        }
+
+        .issue-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+
+        .issue-summary {
+            color: var(--text-light);
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        .severity-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tag-critical {
+            background: var(--accent-danger);
+            color: #8B4A4A;
+        }
+
+        .tag-high {
+            background: var(--accent-warning);
+            color: #8B6A4A;
+        }
+
+        /* Right Panel - Actions */
+        .right-panel {
+            overflow-y: auto;
+            padding-left: 10px;
+        }
+
+        .actions-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(90, 74, 106, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .actions-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-item {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid;
+            font-size: 0.85em;
+        }
+
+        .action-high { border-color: var(--accent-danger); }
+        .action-medium { border-color: var(--accent-warning); }
+        .action-low { border-color: var(--accent-success); }
+
+        .action-text {
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .good-item {
+            background: linear-gradient(135deg, var(--accent-success), var(--pastel-mint));
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            color: #4A7C59;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--pastel-lilac);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--pastel-pink);
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--pastel-lavender);
+            border-top-color: var(--pastel-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            color: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr;
+            }
+
+            .cat-img { width: 100px; }
+            .cat-container { bottom: 10px; left: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="fullscreen-container">
+        <header>
+            <h1>2Long2Read ✨</h1>
+            <div class="subtitle">Your friendly T&C analyzer</div>
+        </header>
+
+        <div id="content" class="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading your analysis...</div>
+        </div>
+    </div>
+
+    <!-- Cute Cat -->
+    <div class="cat-container">
+        <img src="structured_data_hybrid/pngwing.com.png" alt="Cute Cat" class="cat-img">
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('structured_data_hybrid/spotify_tc.json');
+                const data = await response.json();
+                displayData(data);
+            } catch (error) {
+                document.getElementById('content').innerHTML = `
+                    <div style="text-align: center; color: var(--text-light);">
+                        <h2>😢 Oops!</h2>
+                        <p>Could not load the data. Make sure the server is running!</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displayData(data) {
+            const content = document.getElementById('content');
+
+            const html = `
+                <div class="main-content">
+                    <!-- Left Panel -->
+                    <div class="left-panel">
+                        <div class="summary-card">
+                            <div class="company-name">
+                                🎵 ${data.metadata.company_name}
+                            </div>
+                            <p style="color: var(--text-light); font-size: 0.9em; line-height: 1.5;">
+                                ${data.executive_summary.one_liner}
+                            </p>
+                            <div class="verdict-badge">
+                                ${data.executive_summary.overall_verdict}
+                            </div>
+                        </div>
+
+                        <div class="score-display">
+                            <div class="score-circle">
+                                <div class="score-number">${data.risk_scores.overall}</div>
+                            </div>
+                            <div class="score-label">Overall Risk Score</div>
+                            <div class="mini-scores">
+                                <div class="mini-score">
+                                    <div class="mini-score-value">${data.risk_scores.data_privacy}</div>
+                                    <div class="mini-score-label">Privacy</div>
+                                </div>
+                                <div class="mini-score">
+                                    <div class="mini-score-value">${data.risk_scores.termination_risk}</div>
+                                    <div class="mini-score-label">Termination</div>
+                                </div>
+                                <div class="mini-score">
+                                    <div class="mini-score-value">${data.risk_scores.legal_protection}</div>
+                                    <div class="mini-score-label">Legal</div>
+                                </div>
+                                <div class="mini-score">
+                                    <div class="mini-score-value">${data.risk_scores.transparency}</div>
+                                    <div class="mini-score-label">Clarity</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${data.metadata.estimated_reading_time_minutes}</div>
+                                <div class="stat-label">min read</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${(data.metadata.word_count / 1000).toFixed(1)}k</div>
+                                <div class="stat-label">words</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${data.dangerous_clauses.length}</div>
+                                <div class="stat-label">red flags</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center Panel -->
+                    <div class="center-panel">
+                        <div class="section active">
+                            <div class="section-header" onclick="toggleSection(this)">
+                                <div class="section-title">
+                                    ⚠️ Key Takeaways
+                                </div>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <div class="section-inner">
+                                    ${data.executive_summary.key_takeaways.slice(0, 5).map(takeaway => `
+                                        <div style="background: linear-gradient(135deg, var(--pastel-peach), var(--pastel-lemon)); padding: 12px; border-radius: 12px; margin-bottom: 10px; font-size: 0.9em; line-height: 1.4;">
+                                            💡 ${takeaway}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-header" onclick="toggleSection(this)">
+                                <div class="section-title">
+                                    🚨 Top Concerns
+                                    <span class="section-count">${data.dangerous_clauses.filter(c => c.severity === 'CRITICAL' || c.severity === 'HIGH').length}</span>
+                                </div>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <div class="section-inner">
+                                    ${data.dangerous_clauses
+                                        .filter(c => c.severity === 'CRITICAL' || c.severity === 'HIGH')
+                                        .slice(0, 6)
+                                        .map(clause => `
+                                        <div class="issue-card issue-${clause.severity.toLowerCase()}">
+                                            <div class="severity-tag tag-${clause.severity.toLowerCase()}">
+                                                ${clause.severity}
+                                            </div>
+                                            <div class="issue-title">${clause.title}</div>
+                                            <div class="issue-summary">${clause.summary}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-header" onclick="toggleSection(this)">
+                                <div class="section-title">
+                                    📋 All Issues
+                                    <span class="section-count">${data.dangerous_clauses.length}</span>
+                                </div>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <div class="section-inner">
+                                    ${data.dangerous_clauses.slice(0, 10).map(clause => `
+                                        <div class="issue-card issue-${clause.severity.toLowerCase()}">
+                                            <div class="severity-tag tag-${clause.severity.toLowerCase()}">
+                                                ${clause.severity}
+                                            </div>
+                                            <div class="issue-title">${clause.title}</div>
+                                            <div class="issue-summary">${clause.summary}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel -->
+                    <div class="right-panel">
+                        <div class="actions-card">
+                            <div class="actions-title">✅ What to Do</div>
+                            ${data.action_items.slice(0, 5).map(item => `
+                                <div class="action-item action-${item.priority.toLowerCase()}">
+                                    <div class="action-text">
+                                        <strong>${item.action}</strong>
+                                        <div style="margin-top: 5px; color: var(--text-light); font-size: 0.9em;">
+                                            ${item.reason}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="actions-card">
+                            <div class="actions-title">😊 Good News</div>
+                            ${data.good_news.slice(0, 4).map(news => `
+                                <div class="good-item">✨ ${news}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = html;
+        }
+
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('active');
+        }
+
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
